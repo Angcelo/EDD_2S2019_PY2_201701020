@@ -11,6 +11,11 @@ package EDD;
  */
 public class NodoUsuario {
     public String usuario;
-    public String password;  
+    public String password;
     public String documentos;
+    
+    NodoUsuario(String usuario,String password){
+        this.usuario=usuario;
+        this.password=password;
+    }
 }
