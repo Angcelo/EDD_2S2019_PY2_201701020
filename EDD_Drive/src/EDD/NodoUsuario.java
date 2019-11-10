@@ -13,9 +13,11 @@ public class NodoUsuario {
     public String usuario;
     public String password;
     public String documentos;
+    public Carpetas carpetas;
     
     NodoUsuario(String usuario,String password){
         this.usuario=usuario;
         this.password=password;
+        carpetas=new Carpetas();
     }
 }

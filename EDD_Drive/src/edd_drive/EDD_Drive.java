@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import EDD.Usuarios;
+import EDD.Carpetas;
 /**
  *
  * @author angel
@@ -20,19 +21,14 @@ public class EDD_Drive {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws NoSuchAlgorithmException {
-        Usuarios user=new Usuarios();
-        System.out.println(8%7);
-        System.out.println(9%7);
-        System.out.println(10%7);
-        System.out.println(11%7);
-        System.out.println(12%7);
-        System.out.println(13%7);
-        user.Insertar("Javier", "123");
-        user.Insertar("Angel", "123");
-        user.Insertar("Marcelo", "678");
-        user.Insertar("Marroquin", "abc");
-        user.Insertar("Garcia", "cde");
-        user.Insertar("Rama", "yui");
-        user.mostrar();
+        Carpetas hola;
+        hola=new Carpetas();
+        
+        hola.insertar("/", "Documentos");
+        hola.insertar("/", "Imagenes");
+        hola.insertar("/", "Videos");
+        hola.insertar("Documentos", "Publico");
+        hola.insertar("Documentos", "Privado");
+        hola.insertar("Documentos", "Privado");
     }
 }
