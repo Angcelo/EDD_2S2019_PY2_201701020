@@ -6,7 +6,6 @@
 package edd_drive;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -130,7 +129,11 @@ public class Ventana extends javax.swing.JFrame {
         }
         try {
             if (EDD_Drive.user.verificar(indice, password)) {
+                EDD_Drive.usuarioactual=indice;
                 System.out.print("usuario ingresado con exito");
+                Drive dr=new Drive();
+                dr.setVisible(true);
+                this.dispose();
             }else{
                 System.out.print("contraseña incorrecta");
             }

@@ -17,7 +17,7 @@ public class Carpetas {
         this.CrearFil("/");
     }
     
-    public NodoCarpeta BuscarCol(String nombre){
+    private NodoCarpeta BuscarCol(String nombre){
         NodoCarpeta temp=this.inicio;
         while(temp!=null){
             if (temp.nombre.equals(nombre)) {
@@ -30,7 +30,7 @@ public class Carpetas {
         return null;
     }
     
-    public NodoCarpeta BuscarFil(String nombre){
+    private NodoCarpeta BuscarFil(String nombre){
         NodoCarpeta temp=this.inicio;
         while(temp!=null){
             if (temp.nombre.equals(nombre)) {
@@ -43,7 +43,7 @@ public class Carpetas {
         return null;
     }
     
-    public NodoCarpeta InsertarCol(NodoCarpeta nuevo,NodoCarpeta cabezaCol){
+    private NodoCarpeta InsertarCol(NodoCarpeta nuevo,NodoCarpeta cabezaCol){
         NodoCarpeta temp=cabezaCol;
         boolean bandera=false;
         while(true){
@@ -70,7 +70,7 @@ public class Carpetas {
         return nuevo;
     }
     
-    public NodoCarpeta InsertarFil(NodoCarpeta nuevo,NodoCarpeta cabezaCol){
+    private NodoCarpeta InsertarFil(NodoCarpeta nuevo,NodoCarpeta cabezaCol){
         NodoCarpeta temp=cabezaCol;
         boolean bandera=false;
         while(true){
@@ -97,7 +97,7 @@ public class Carpetas {
         return nuevo;
     }
     
-    public NodoCarpeta CrearCol(String nombre){
+    private NodoCarpeta CrearCol(String nombre){
         NodoCarpeta temp=this.inicio;
         while(temp.sig!=null){
             temp=temp.sig;
@@ -109,7 +109,7 @@ public class Carpetas {
         return nuevo;
     }
     
-    public NodoCarpeta CrearFil(String nombre){
+    private NodoCarpeta CrearFil(String nombre){
         NodoCarpeta temp=this.inicio;
         while(temp.sup!=null){
             temp=temp.sup;
@@ -140,5 +140,19 @@ public class Carpetas {
         nuevo=InsertarCol(nuevo,fil);
         nuevo=InsertarFil(nuevo,col);
         System.out.println(nuevo.nombre+"("+nuevo.x+","+nuevo.y+")");
+    }
+    
+    public String BuscarArchivos(String inicio){
+        NodoCarpeta padre=this.BuscarCol(inicio);
+        String carpetas="";
+        if (padre.sup!=null) {
+            padre=padre.sup;
+            while(padre!=null){
+                carpetas+=padre.nombre+",";
+                padre=padre.sup;
+            }
+        }
+        System.out.println("esta es la lista de carpetas: "+carpetas);
+        return carpetas;
     }
 }
