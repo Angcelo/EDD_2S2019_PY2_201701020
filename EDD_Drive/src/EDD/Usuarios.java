@@ -19,6 +19,10 @@ public class Usuarios {
     public int lleno=0;
     
     public void Insertar(String usuario,String password) throws NoSuchAlgorithmException{
+        if (BuscarUsuario(usuario)!=-1) {
+            System.out.println("Usuario existente");
+            return;
+        }
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] encodedhash = digest.digest(usuario.getBytes(StandardCharsets.UTF_8));
         int decimal=Arrays.hashCode(encodedhash);
@@ -77,5 +81,24 @@ public class Usuarios {
                 System.out.println("    ˇ");
             }
         }
+    }
+    
+    public int BuscarUsuario(String usuario){
+        for(int i=0;i<usuarios.length;i++){
+            if (usuarios[i]!=null && usuarios[i].usuario.equals(usuario)) {  
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public boolean verificar(int indice,String pass) throws NoSuchAlgorithmException{
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] passencode = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
+        int passcode=Arrays.hashCode(passencode);
+        if (this.usuarios[indice]!=null) {
+            return this.usuarios[indice].password.equals(passcode+"");   
+        }
+        return false;
     }
 }
