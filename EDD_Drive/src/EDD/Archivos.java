@@ -218,6 +218,75 @@ public class Archivos {
         return n;
     }
     
+    public String ListaArchivos(){
+        String archivo="";
+        if (this.Raiz!=null) {
+            if (this.Raiz.izq!=null) {  
+                archivo+=this.listaArchivos2(this.Raiz.izq);
+            }
+            archivo+=this.Raiz.nombre+"."+this.Raiz.extension+",";
+            if (this.Raiz.der!=null) {
+                archivo+=this.listaArchivos2(this.Raiz.der);
+            }    
+        }
+        return archivo;
+    }
+    
+    public String listaArchivos2(NodoArchivo actual){
+        String archivo="";
+        if (actual.izq!=null) {  
+            archivo+=this.listaArchivos2(actual.izq);
+        }
+        archivo+=actual.nombre+"."+actual.extension+",";
+        if (actual.der!=null) {
+            archivo+=this.listaArchivos2(actual.der);
+        }
+        return archivo;
+    }
+    
+    public String[] BuscarArchivo(String nombre){
+        String[] archivo=new String[4];
+        NodoArchivo raiz=this.Raiz;
+        if (this.Raiz.nombre.equals(nombre)) {
+            archivo[0]=this.Raiz.nombre;
+            archivo[1]=this.Raiz.extension;
+            archivo[2]=this.Raiz.contenido;
+            archivo[3]=this.Raiz.fecha;
+        }else{
+            if (this.Raiz.nombre.compareTo(nombre)>0){
+                if (this.Raiz.izq!=null) {
+                    BuscarArchivo2(nombre,this.Raiz.izq);
+                }
+            }else if(this.Raiz.nombre.compareTo(nombre)<0){
+                if (this.Raiz.der!=null){
+                    BuscarArchivo2(nombre,this.Raiz.der);
+                }
+            }
+        }
+        return archivo;
+    }
+    
+    public String[] BuscarArchivo2(String nombre,NodoArchivo actual){
+        String[] archivo=new String[4];
+        if (actual.nombre.equals(nombre)) {
+            archivo[0]=actual.nombre;
+            archivo[1]=actual.extension;
+            archivo[2]=actual.contenido;
+            archivo[3]=actual.fecha;
+        }else{
+            if (actual.nombre.compareTo(nombre)>0){
+                if (actual.izq!=null) {
+                    archivo=BuscarArchivo2(nombre,actual.izq);
+                }
+            }else if(actual.nombre.compareTo(nombre)<0){
+                if (actual.der!=null){
+                    archivo=BuscarArchivo2(nombre,actual.der);
+                }
+            }
+        }
+        return archivo;
+    }
+    
     public void graficar() throws IOException{
         File file=new File("arbol.dot");
         BufferedWriter bw;

@@ -122,7 +122,7 @@ public class Registrar extends javax.swing.JFrame {
         char[] pass2=txtpass1.getPassword();
         String password=String.copyValueOf(pass);
         String password2=String.copyValueOf(pass2);
-        if (password.equals(password2)) {
+        if (password.equals(password2) && password.length()>=8) {
             if (!usuario.equals("") || !password.equals("")) {
                 try {
                     EDD_Drive.user.Insertar(usuario, password);
@@ -134,6 +134,8 @@ public class Registrar extends javax.swing.JFrame {
             }else{
                 System.out.println("No deje casillas en blanco");
             }   
+        }else if(password.length()<8){
+            System.out.println("La contraseña debe contener al menos 8 caracteres");
         }
         else{
             System.out.println("No coinciden las contraseñas");

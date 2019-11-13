@@ -5,6 +5,9 @@
  */
 package EDD;
 
+import java.io.IOException;
+import java.util.Calendar;
+
 /**
  *
  * @author angel
@@ -154,5 +157,73 @@ public class Carpetas {
         }
         System.out.println("esta es la lista de carpetas: "+carpetas);
         return carpetas;
+    }
+    
+    public void InsertarArchivo(String inicio,String nombre,String extension,String contenido) throws IOException{
+        NodoCarpeta padre=this.BuscarCol(inicio);
+        Calendar calendario = Calendar.getInstance();
+        int hora =calendario.get(Calendar.HOUR_OF_DAY);
+        int minutos = calendario.get(Calendar.MINUTE);
+        int segundos = calendario.get(Calendar.SECOND);
+        String tiempo=hora + ":" + minutos + ":" + segundos;
+        padre.archivos.insertar1(nombre,extension,contenido,tiempo);
+    }
+    
+    public String SearchArchivo(String inicio){
+        NodoCarpeta padre=this.BuscarCol(inicio);
+        return padre.archivos.ListaArchivos();
+    }    
+    
+    public String[] contenidoarchivo(String inicio,String nombreextension){
+        NodoCarpeta padre=this.BuscarCol(inicio);
+        String[] nomext=nombreextension.split("\\.");
+        String[] archivo=padre.archivos.BuscarArchivo(nomext[0]);
+        return archivo;
+    }
+    
+    public void modificarcarpeta(String inicio,String nuevo){
+        NodoCarpeta col=this.BuscarCol(inicio);
+        NodoCarpeta fil=this.BuscarFil(inicio);
+        col.nombre=nuevo;
+        fil.nombre=nuevo;
+        col=col.sup;
+        while(col!=null){
+            col.nombre=col.nombre.replace(inicio, nuevo);
+            col=col.sup;
+        }
+        fil=fil.sig;
+        while(fil!=null){
+            fil.nombre=fil.nombre.replace(inicio, nuevo);
+            fil=fil.sig;
+        }
+    }
+    
+    public void eliminar(String inicio){
+        NodoCarpeta col=this.BuscarCol(inicio);
+        NodoCarpeta fil=this.BuscarFil(inicio); 
+        NodoCarpeta temcol=col.sup;
+        NodoCarpeta temfil=fil.sig;
+        while(temcol!=null){
+            if (temcol.sig!=null) {
+                temcol.sig.ant=temcol.ant;
+            }
+            temcol.ant.sig=temcol.sig;
+            temcol=temcol.sup;
+        }
+        while(temfil!=null){
+            if (temfil.sup!=null) {
+                temfil.sup.inf=temfil.inf;
+            }
+            temfil.inf.sup=temfil.sup;
+            temfil=temfil.sig;
+        }
+        if (col.sig!=null) {
+            col.sig.ant=col.ant;
+        }
+        col.ant.sig=col.sig;
+        if (fil.sup!=null) {
+            fil.sup.inf=fil.inf;
+        }
+        fil.inf.sup=fil.sup;
     }
 }

@@ -143,6 +143,8 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_btnentrarActionPerformed
 
     private void btnregActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnregActionPerformed
+        this.txtpass.setText("");
+        this.txtuser.setText("");
         Registrar reg=new Registrar();
         reg.setVisible(true);
     }//GEN-LAST:event_btnregActionPerformed
