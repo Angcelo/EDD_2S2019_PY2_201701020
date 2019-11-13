@@ -6,6 +6,7 @@
 package edd_drive;
 
 import EDD.Usuarios;
+import EDD.Bitacora;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -16,6 +17,8 @@ public class EDD_Drive {
 
     static Usuarios user=new Usuarios();
     static int usuarioactual;
+    static Bitacora bitacora=new Bitacora();
+    
     public static void main(String[] args) throws NoSuchAlgorithmException{
         user.Insertar("Admin","Admin");
         Ventana ventana =new Ventana();

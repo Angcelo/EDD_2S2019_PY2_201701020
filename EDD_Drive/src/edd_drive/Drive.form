@@ -29,10 +29,11 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPcar" alignment="0" max="32767" attributes="0"/>
                   <Component id="jParc" alignment="0" max="32767" attributes="0"/>
                   <Component id="btnsalir" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnbitacora" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPcontenido" min="-2" pref="829" max="-2" attributes="0"/>
@@ -51,6 +52,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jParc" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="btnbitacora" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnsalir" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -215,6 +218,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnsalirActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnbitacora">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Bitacora"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnbitacoraActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -60,6 +61,7 @@ public class Drive extends javax.swing.JFrame {
         btnuparc = new javax.swing.JButton();
         jPcontenido = new javax.swing.JPanel();
         btnsalir = new javax.swing.JButton();
+        btnbitacora = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("drive "+EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
@@ -161,16 +163,24 @@ public class Drive extends javax.swing.JFrame {
             }
         });
 
+        btnbitacora.setText("Bitacora");
+        btnbitacora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbitacoraActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPcar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jParc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnsalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnsalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnbitacora, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPcontenido, javax.swing.GroupLayout.PREFERRED_SIZE, 829, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -186,6 +196,8 @@ public class Drive extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jParc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnbitacora)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnsalir)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -197,8 +209,17 @@ public class Drive extends javax.swing.JFrame {
         String name=JOptionPane.showInputDialog(null,"Nombre de la carpeta");
         if(name!=null){
             EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.insertar(this.carpetaactual, name);
+            Calendar calendario = Calendar.getInstance();
+            int hora =calendario.get(Calendar.HOUR_OF_DAY);
+            int minutos = calendario.get(Calendar.MINUTE);
+            int segundos = calendario.get(Calendar.SECOND);
+            int año=calendario.get(Calendar.YEAR);
+            int mes=calendario.get(Calendar.MONTH)+1;
+            int dia=calendario.get(Calendar.DATE);
+            String fecha=dia+"/"+mes+"/"+año;
+            String tiempo=hora + ":" + minutos + ":" + segundos;
+            EDD_Drive.bitacora.insertar(fecha, tiempo, "Creacion carpeta "+name ,EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
         }
-        String allarchivo = EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.BuscarArchivos(this.carpetaactual);
         crearbotones(this.carpetaactual,this.direccion);
     }//GEN-LAST:event_btncrearcarActionPerformed
 
@@ -220,6 +241,16 @@ public class Drive extends javax.swing.JFrame {
                 String[] nomext=nombre.getText().split("\\.");
                 try {
                     EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.InsertarArchivo(this.carpetaactual, nomext[0], nomext[1],contenido.getText());
+                    Calendar calendario = Calendar.getInstance();
+                    int hora =calendario.get(Calendar.HOUR_OF_DAY);
+                    int minutos = calendario.get(Calendar.MINUTE);
+                    int segundos = calendario.get(Calendar.SECOND);
+                    int año=calendario.get(Calendar.YEAR);
+                    int mes=calendario.get(Calendar.MONTH)+1;
+                    int dia=calendario.get(Calendar.DATE);
+                    String fecha=dia+"/"+mes+"/"+año;
+                    String tiempo=hora + ":" + minutos + ":" + segundos;
+                    EDD_Drive.bitacora.insertar(fecha, tiempo, "Creacion archivo " + nombre.getText() ,EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
                     crearbotones(this.carpetaactual,this.direccion);
                 } catch (IOException ex) {
                     Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
@@ -232,6 +263,16 @@ public class Drive extends javax.swing.JFrame {
         String name=JOptionPane.showInputDialog(null,"Nombre de la carpeta");
         if (name!=null && !this.carpetaactual.equals("/")) {
             EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.modificarcarpeta(this.carpetaactual, name);   
+            Calendar calendario = Calendar.getInstance();
+            int hora =calendario.get(Calendar.HOUR_OF_DAY);
+            int minutos = calendario.get(Calendar.MINUTE);
+            int segundos = calendario.get(Calendar.SECOND);
+            int año=calendario.get(Calendar.YEAR);
+            int mes=calendario.get(Calendar.MONTH)+1;
+            int dia=calendario.get(Calendar.DATE);
+            String fecha=dia+"/"+mes+"/"+año;
+            String tiempo=hora + ":" + minutos + ":" + segundos;
+            EDD_Drive.bitacora.insertar(fecha, tiempo, "Modificacion de "+this.carpetaactual+" a "+name ,EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
             this.direccion=this.direccion.replace(this.carpetaactual, name);
             this.carpetaactual=name;
             System.out.println("Esta es la direccion despues de modificar"+this.direccion);
@@ -247,6 +288,16 @@ public class Drive extends javax.swing.JFrame {
         boolean decision=JOptionPane.showConfirmDialog(null, "Desea Eliminar")==JOptionPane.OK_OPTION;
         if (decision && !this.carpetaactual.equals("/")) {
             EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.eliminar(this.carpetaactual);   
+            Calendar calendario = Calendar.getInstance();
+            int hora =calendario.get(Calendar.HOUR_OF_DAY);
+            int minutos = calendario.get(Calendar.MINUTE);
+            int segundos = calendario.get(Calendar.SECOND);
+            int año=calendario.get(Calendar.YEAR);
+            int mes=calendario.get(Calendar.MONTH)+1;
+            int dia=calendario.get(Calendar.DATE);
+            String fecha=dia+"/"+mes+"/"+año;
+            String tiempo=hora + ":" + minutos + ":" + segundos;
+            EDD_Drive.bitacora.insertar(fecha, tiempo, "Eliminacion de "+this.carpetaactual,EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
             this.direccion=this.direccion.replace("/"+this.carpetaactual, "");
             if(this.direccion.equals("")){
                 this.direccion="/";
@@ -269,6 +320,14 @@ public class Drive extends javax.swing.JFrame {
         inicio.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnsalirActionPerformed
+
+    private void btnbitacoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbitacoraActionPerformed
+        try {
+            EDD_Drive.bitacora.GraficarBitacora();
+        } catch (IOException ex) {
+            Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnbitacoraActionPerformed
 
     /**
      * @param args the command line arguments
@@ -390,6 +449,7 @@ public class Drive extends javax.swing.JFrame {
     }  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnbitacora;
     private javax.swing.JButton btncreararc;
     private javax.swing.JButton btncrearcar;
     private javax.swing.JButton btneliarc;
