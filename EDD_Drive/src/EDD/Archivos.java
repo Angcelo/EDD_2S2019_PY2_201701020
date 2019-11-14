@@ -246,7 +246,6 @@ public class Archivos {
     
     public String[] BuscarArchivo(String nombre){
         String[] archivo=new String[4];
-        NodoArchivo raiz=this.Raiz;
         if (this.Raiz.nombre.equals(nombre)) {
             archivo[0]=this.Raiz.nombre;
             archivo[1]=this.Raiz.extension;
@@ -285,6 +284,170 @@ public class Archivos {
             }
         }
         return archivo;
+    }
+    
+    public void Eliminar(String nombre){
+        String nuevonombre=Reemplazo(eliminar,false);
+        if (this.nivel) {
+            if (nuevonombre.equals("")) {
+                NodoArchivo eliminar=BuscaraEliminar(nombre,true);
+            }else{
+                
+            }
+        }
+        this.nivel=false;
+    }
+    
+    public NodoArchivo BuscaraEliminar(String nombre,boolean equilibrar){
+        NodoArchivo Aeliminar=null;
+        if (this.Raiz.nombre.equals(nombre)) {
+            return this.Raiz;
+        }else{
+            if (this.Raiz.nombre.compareTo(nombre)>0){
+                if (this.Raiz.izq!=null) {
+                    Aeliminar=BuscaraEliminar(nombre,this.Raiz.izq,equilibrar);
+                }
+            }else if(this.Raiz.nombre.compareTo(nombre)<0){
+                if (this.Raiz.der!=null){
+                    Aeliminar=BuscaraEliminar(nombre,this.Raiz.der,equilibrar);
+                }
+            }
+        }  
+        return Aeliminar;
+    }
+    
+    public NodoArchivo BuscaraEliminar(String nombre,NodoArchivo actual,boolean equilibrar){
+        NodoArchivo Aeliminar=null;
+        if (actual.nombre.equals(nombre)) {
+            return actual;
+        }else{
+            if (actual.nombre.compareTo(nombre)>0){
+                if (actual.izq!=null) {
+                    Aeliminar=BuscaraEliminar(nombre,actual.izq,equilibrar);
+                }
+            }else if(actual.nombre.compareTo(nombre)<0){
+                if (actual.der!=null){
+                    Aeliminar=BuscaraEliminar(nombre,actual.der,equilibrar);
+                }
+            }
+        }  
+        return Aeliminar;
+    }
+    
+    public String Reemplazo(NodoArchivo actual){
+        NodoArchivo Aeliminar=null;
+        if (actual.izq==null && actual.der==null) {
+            actual=null;
+            this.nivel=true;
+            return "";
+        }else if(actual.izq==null && actual.der!=null){
+            if (actual.der.izq==null && actual.der.der==null) {
+                actual.nombre=actual.der.nombre;
+                actual.extension=actual.der.extension;
+                actual.fecha=actual.der.fecha;
+                actual.equilibrio=0;
+                this.nivel=true;
+                actual.der=null;
+                return actual.nombre;
+            }
+        }else if(actual.izq!=null){
+            if (actual.izq.izq==null && actual.izq.der==null) {
+                actual.nombre=actual.izq.nombre;
+                actual.extension=actual.izq.extension;
+                actual.fecha=actual.izq.fecha;
+                if (actual.der==null) {
+                    actual.equilibrio=0;
+                    this.nivel=true;
+                }else{
+                    actual.equilibrio=1;
+                }
+                actual.izq=null;
+                return actual.nombre;
+            }
+        }
+        Aeliminar=Reemplazoizq(actual.izq);  
+        if (Aeliminar==null) {
+            Aeliminar=Reemplazoder(actual.der);
+            if (Aeliminar==null) {
+                actual.izq.der=actual.izq;
+                actual=actual.izq;
+                actual.equilibrio=1;
+                this.nivel=true;
+            }else{
+                actual.nombre=Aeliminar.nombre;
+                actual.extension=Aeliminar.extension;
+                actual.fecha=Aeliminar.fecha;
+                if (nivel) {
+                    actual.equilibrio--;
+                }
+            }
+        }else{
+            actual.nombre=Aeliminar.nombre;
+            actual.extension=Aeliminar.extension;
+            actual.fecha=Aeliminar.fecha;
+            if (this.nivel) {
+                actual.equilibrio++;
+            }
+        }
+        return actual.nombre;
+    }
+    
+    public NodoArchivo Reemplazoder(NodoArchivo actual){
+        NodoArchivo Aeliminar;
+        if (actual.der!=null) {
+            Aeliminar=Reemplazoizq(actual.der);
+            if(Aeliminar!=null){
+                if(this.nivel){
+                    actual.equilibrio--;
+                }
+                return Aeliminar;
+            }
+        }
+        if (actual.izq==null) {
+            return null;
+        }else{
+            if (actual.izq.der==null && actual.izq.izq==null) {
+                if (actual.der==null) {
+                    actual.equilibrio=0;
+                    this.nivel=true;
+                }else{
+                    actual.equilibrio=1;
+                }
+                return actual.izq;
+            }else{
+                Aeliminar=Reemplazoizq(actual.izq);
+            }
+        }
+        return Aeliminar;
+    }
+    
+    public NodoArchivo Reemplazoizq(NodoArchivo actual){
+        NodoArchivo Aeliminar;
+        if (actual.izq!=null) {
+            Aeliminar=Reemplazoizq(actual.izq);
+            if(Aeliminar!=null){
+                if(this.nivel){
+                    actual.equilibrio++;
+                }
+                return Aeliminar;
+            }
+        }
+        if (actual.der==null) {
+            return null;
+        }else{
+            if (actual.der.der==null && actual.der.izq==null) {
+                if (actual.izq==null) {
+                    actual.equilibrio=0;
+                    this.nivel=true;
+                }else{
+                    actual.equilibrio=-1;
+                }
+                return actual.der;
+            }else{
+                Aeliminar=Reemplazoizq(actual.der);
+            }
+        }
+        return Aeliminar;
     }
     
     public void graficar() throws IOException{
