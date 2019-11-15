@@ -11,6 +11,7 @@ package EDD;
  */
 public class NodoCarpeta {
     public String nombre;
+    public String nombreindice;
     public int x,y;   
     public NodoCarpeta sig,ant,sup,inf;
     public Archivos archivos;
@@ -20,5 +21,14 @@ public class NodoCarpeta {
         this.x=x;
         this.y=y;
         archivos=new Archivos();
+        this.nombreindice=nombre;
+    }
+    
+    public NodoCarpeta(String nombre,int x,int y,String indice){
+        this.nombre=nombre;
+        this.x=x;
+        this.y=y;
+        archivos=new Archivos();
+        this.nombreindice=indice;
     }
 }

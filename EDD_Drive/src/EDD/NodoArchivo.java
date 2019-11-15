@@ -11,14 +11,15 @@ package EDD;
  */
 public class NodoArchivo {
     public String nombre,extension,contenido,fecha;
-    public int equilibrio;
+    public int pesoizq,pesoder;
     public NodoArchivo izq,der;
     public NodoArchivo(String nombre,String extension,String contenido,String fecha){
         this.nombre=nombre;
         this.extension=extension;
         this.contenido=contenido;
         this.fecha=fecha;
-        this.equilibrio=0;
+        this.pesoizq=0;
+        this.pesoder=0;
         this.izq=null;
         this.der=null;
     }

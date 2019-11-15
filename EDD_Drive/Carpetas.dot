@@ -1,0 +1,11 @@
+digraph pila{ 
+node [shape="record"]; 
+inicio [label = "{raiz|(0,0)}"];
+/[label = "{/|(1,0)}"];
+//hola[label = "{//hola|(1,2)}"];
+hola[label = "{hola|(2,0)}"];
+hola/hol[label = "{hola/hol|(2,3)}"];
+hola/hola1[label = "{hola/hola|(2,4)}"];
+hol[label = "{hol|(3,0)}"];
+hola1[label = "{hola|(4,0)}"];
+}

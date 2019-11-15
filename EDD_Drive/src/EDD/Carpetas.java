@@ -5,6 +5,9 @@
  */
 package EDD;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -20,10 +23,10 @@ public class Carpetas {
         this.CrearFil("/");
     }
     
-    private NodoCarpeta BuscarCol(String nombre){
+    private NodoCarpeta BuscarCol(String nombreindice){
         NodoCarpeta temp=this.inicio;
         while(temp!=null){
-            if (temp.nombre.equals(nombre)) {
+            if (temp.nombreindice.equals(nombreindice)) {
                 System.out.println("col: "+temp.nombre+"( "+temp.x+","+temp.y+")");
                 return temp;
             }
@@ -33,10 +36,10 @@ public class Carpetas {
         return null;
     }
     
-    private NodoCarpeta BuscarFil(String nombre){
+    private NodoCarpeta BuscarFil(String nombreindice){
         NodoCarpeta temp=this.inicio;
         while(temp!=null){
-            if (temp.nombre.equals(nombre)) {
+            if (temp.nombreindice.equals(nombreindice)) {
                 System.out.println("fil: "+temp.nombre+"( "+temp.x+","+temp.y+")");
                 return temp;
             }
@@ -124,22 +127,49 @@ public class Carpetas {
         return nuevo;
     }
     
+    public boolean interseccion(NodoCarpeta fila, String valor){
+        NodoCarpeta temp=fila;
+        while(temp!=null){
+            if (temp.nombreindice.equals(valor)) {
+                return true;
+            }
+            temp=temp.sig;
+        }
+        return false;
+    }
+    
     public void insertar(String principal,String secundaria){
         NodoCarpeta col=BuscarCol(principal);
         NodoCarpeta fil=BuscarFil(secundaria);  
-        
         if (col!=null && fil!=null) {
-            System.out.print("ya existe carpeta");
-            return;
-        }
-        if (col!=null && fil==null){
+            int iterador=1;
+            if (interseccion(fil,principal+"/"+secundaria)) {
+                System.out.print("ya existe carpeta");
+                return;
+            }
+            while(fil!=null){
+                System.out.println(secundaria+(iterador-1));
+                if (interseccion(fil,principal+"/"+secundaria+(iterador-1))) {
+                    System.out.print("ya existe carpeta");
+                    return;
+                }
+                System.out.println(secundaria+iterador);
+                fil=BuscarFil(secundaria+iterador);
+                iterador++;
+            }
+            fil=CrearFil(secundaria);
+            NodoCarpeta col2 =CrearCol(secundaria);
+            iterador--;
+            fil.nombreindice=secundaria+iterador;
+            col2.nombreindice=secundaria+iterador;
+        }else if (col!=null && fil==null){
             fil=CrearFil(secundaria);
             CrearCol(secundaria);
-        }
-        if (col==null) {
+        }else if (col==null) {
             System.out.print("Error no existe carpeta en la que se encuentra");
         }
-        NodoCarpeta nuevo=new NodoCarpeta((principal+"/"+secundaria),col.x,fil.y);
+        NodoCarpeta nuevo=new NodoCarpeta((principal+"/"+secundaria),col.x,fil.y,col.nombre+"/"+fil.nombre);
+        nuevo.nombreindice=principal+"/"+fil.nombreindice;
         nuevo=InsertarCol(nuevo,fil);
         nuevo=InsertarFil(nuevo,col);
         System.out.println(nuevo.nombre+"("+nuevo.x+","+nuevo.y+")");
@@ -148,10 +178,17 @@ public class Carpetas {
     public String BuscarArchivos(String inicio){
         NodoCarpeta padre=this.BuscarCol(inicio);
         String carpetas="";
+        int numero=0;
         if (padre.sup!=null) {
             padre=padre.sup;
             while(padre!=null){
-                carpetas+=padre.nombre+",";
+                for(char i:padre.nombreindice.toCharArray()){
+                    try{
+                        numero=Integer.parseInt(i+"");
+                    }catch(NumberFormatException e){}
+                }
+                System.out.println("numero completo:" +numero);
+                carpetas+=padre.nombre+"#"+numero+"#,";
                 padre=padre.sup;
             }
         }
@@ -225,5 +262,28 @@ public class Carpetas {
             fil.sup.inf=fil.inf;
         }
         fil.inf.sup=fil.sup;
+    }
+    
+    public void Graficar() throws IOException{
+        NodoCarpeta tempx=this.inicio.sig;
+        NodoCarpeta tempy;
+        File file=new File("Carpetas.dot");
+        BufferedWriter bw;
+        bw=new BufferedWriter(new FileWriter(file));
+        String archivo;
+        archivo="digraph pila{ \n";
+        archivo+="node [shape=\"record\"]; \n";
+        archivo+="inicio [label = \"{"+inicio.nombre+"|("+inicio.x+","+inicio.y+")}\"];\n";
+        while(tempx!=null){
+            tempy=tempx;
+            while(tempy!=null){
+                archivo+=tempy.nombreindice+"[label = \"{"+tempy.nombre+"|("+tempy.x+","+tempy.y+")}\"];\n";
+                tempy=tempy.sup;
+            }
+            tempx=tempx.sig;
+        }
+        archivo+="}";
+        bw.write(archivo);
+        bw.close();
     }
 }

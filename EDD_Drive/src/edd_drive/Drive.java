@@ -56,12 +56,11 @@ public class Drive extends javax.swing.JFrame {
         btnelicar = new javax.swing.JButton();
         jParc = new javax.swing.JPanel();
         btncreararc = new javax.swing.JButton();
-        btnmodarc = new javax.swing.JButton();
-        btneliarc = new javax.swing.JButton();
         btnuparc = new javax.swing.JButton();
         jPcontenido = new javax.swing.JPanel();
         btnsalir = new javax.swing.JButton();
         btnbitacora = new javax.swing.JButton();
+        btnreportecar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("drive "+EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
@@ -122,10 +121,6 @@ public class Drive extends javax.swing.JFrame {
             }
         });
 
-        btnmodarc.setText("Modificar");
-
-        btneliarc.setText("Eiminar");
-
         btnuparc.setText("Subir");
 
         javax.swing.GroupLayout jParcLayout = new javax.swing.GroupLayout(jParc);
@@ -135,9 +130,7 @@ public class Drive extends javax.swing.JFrame {
             .addGroup(jParcLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jParcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btncreararc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnmodarc, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                    .addComponent(btneliarc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btncreararc, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
                     .addComponent(btnuparc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -146,10 +139,6 @@ public class Drive extends javax.swing.JFrame {
             .addGroup(jParcLayout.createSequentialGroup()
                 .addComponent(btncreararc)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnmodarc)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btneliarc)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnuparc)
                 .addContainerGap())
         );
@@ -170,6 +159,13 @@ public class Drive extends javax.swing.JFrame {
             }
         });
 
+        btnreportecar.setText("Reporte Carpetas");
+        btnreportecar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnreportecarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -180,7 +176,8 @@ public class Drive extends javax.swing.JFrame {
                     .addComponent(jPcar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jParc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnsalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnbitacora, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnbitacora, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnreportecar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPcontenido, javax.swing.GroupLayout.PREFERRED_SIZE, 829, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -196,6 +193,8 @@ public class Drive extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jParc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnreportecar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnbitacora)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnsalir)))
@@ -208,6 +207,7 @@ public class Drive extends javax.swing.JFrame {
     private void btncrearcarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncrearcarActionPerformed
         String name=JOptionPane.showInputDialog(null,"Nombre de la carpeta");
         if(name!=null){
+            System.out.println("Carpeta en la que se va a insertar"+this.carpetaactual);
             EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.insertar(this.carpetaactual, name);
             Calendar calendario = Calendar.getInstance();
             int hora =calendario.get(Calendar.HOUR_OF_DAY);
@@ -329,6 +329,14 @@ public class Drive extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnbitacoraActionPerformed
 
+    private void btnreportecarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnreportecarActionPerformed
+        try {
+            EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.Graficar();
+        } catch (IOException ex) {
+            Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnreportecarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -394,17 +402,28 @@ public class Drive extends javax.swing.JFrame {
         String arch=EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.SearchArchivo(carpeta);
         System.out.println("esta es la lista de archivos: "+arch);
         String arraycarpetas[]=carp.split(",");
+        
         String arrayarchivos[]=arch.split(",");
         this.carpetas=new javax.swing.JButton[arraycarpetas.length];
         this.archivos=new javax.swing.JButton[arrayarchivos.length];
         for (int i=0;i<arraycarpetas.length;i++) {
             if (!arraycarpetas[i].equals("")) {
+                int index=arraycarpetas[i].indexOf("#");
+                int index2=arraycarpetas[i].indexOf("#", index+1);
+                String subcadena=arraycarpetas[i].substring(index, index2+1);
+                int entero=Integer.parseInt(subcadena.replace("#", ""));
+                System.out.println("entero "+entero);
+                arraycarpetas[i]=arraycarpetas[i].replace(subcadena, "");
                 String carpetas2[]=arraycarpetas[i].split("/");
                 this.carpetas[i]=new javax.swing.JButton(carpetas2[carpetas2.length-1]);
                 this.carpetas[i].setIcon(defaultIcon);
+                if (entero==0) {
+                    this.carpetas[i].setActionCommand(this.carpetas[i].getText());
+                }else{
+                    this.carpetas[i].setActionCommand(this.carpetas[i].getText()+entero);
+                }
                 this.carpetas[i].addActionListener((ActionEvent e) -> 
                 {
-                    System.out.println(e.getActionCommand());
                     if (this.carpetaactual.equals("/")) {
                         this.direccion+=e.getActionCommand();
                     }else{
@@ -422,7 +441,6 @@ public class Drive extends javax.swing.JFrame {
                 this.archivos[i].setIcon(this.defaultIconarchivo);
                 this.archivos[i].addActionListener((ActionEvent e) -> 
                 {
-                    System.out.println(e.getActionCommand());
                     javax.swing.JTextField nombre=new javax.swing.JTextField(10);
                     javax.swing.JTextArea contenido=new javax.swing.JTextArea(10, 10);
                     nombre.setText(e.getActionCommand());
@@ -452,10 +470,9 @@ public class Drive extends javax.swing.JFrame {
     private javax.swing.JButton btnbitacora;
     private javax.swing.JButton btncreararc;
     private javax.swing.JButton btncrearcar;
-    private javax.swing.JButton btneliarc;
     private javax.swing.JButton btnelicar;
-    private javax.swing.JButton btnmodarc;
     private javax.swing.JButton btnmodcar;
+    private javax.swing.JButton btnreportecar;
     private javax.swing.JButton btnsalir;
     private javax.swing.JButton btnuparc;
     private javax.swing.JPanel jParc;

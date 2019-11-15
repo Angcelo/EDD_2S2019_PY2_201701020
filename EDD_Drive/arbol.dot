@@ -1,5 +1,10 @@
 digraph pila{ 
 node [shape="record"]; 
-kala->jala
-kala->mama
+lila [ label = "{lila.txt|izq: 2, der: 1}"];
+lila->kilo
+kilo [ label = "{kilo.txt|izq: 1, der: 1}"];
+kilo->jaula
+jaula [ label = "{jaula.txt|izq: 0, der: 0}"];
+lila->papa
+papa [ label = "{papa.txt|izq: 0, der: 0}"];
 }
