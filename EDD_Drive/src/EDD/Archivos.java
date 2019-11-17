@@ -6,10 +6,15 @@
 package EDD;
 
 import java.awt.Desktop;
+import java.awt.Image;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -17,7 +22,7 @@ import java.io.IOException;
  */
 public class Archivos {
     public NodoArchivo Raiz;
-    public boolean eliminar=false;
+    private boolean eliminar=false;
     public Archivos(){
         Raiz=null; 
     }
@@ -28,16 +33,18 @@ public class Archivos {
             this.Raiz=nuevo;
         }
         else{
-            if (this.Raiz.nombre.compareTo(nombre)>0) {
+            if ((this.Raiz.nombre+"."+this.Raiz.extension).compareTo(nombre+"."+extension)>0) {
                 if (this.Raiz.izq==null) {
                     this.Raiz.izq=nuevo;
                     this.Raiz.pesoizq++;
                 }else{
+                    int eant=this.Raiz.izq.pesoder-this.Raiz.izq.pesoizq;
                     NodoArchivo temp=this.insertar2(nuevo,this.Raiz.izq);
+                    int enuevo=this.Raiz.izq.pesoder-this.Raiz.izq.pesoizq;
                     if (temp!=null) {
                         this.Raiz.izq=temp;
                     }
-                    if ((this.Raiz.izq.pesoder-this.Raiz.izq.pesoizq)!=0){
+                    if (eant!=enuevo && enuevo!=0){
                         this.Raiz.pesoizq++;
                     }
                     if ((this.Raiz.pesoder-this.Raiz.pesoizq)<-1 && (this.Raiz.izq.pesoder-this.Raiz.izq.pesoizq)<0) {                        
@@ -48,19 +55,21 @@ public class Archivos {
                     }
                 }
             }
-            else if(this.Raiz.nombre.compareTo(nombre)<0){
+            else if((this.Raiz.nombre+"."+this.Raiz.extension).compareTo(nombre+"."+extension)<0){
                 if (this.Raiz.der==null) {
                     this.Raiz.der=nuevo;
                     this.Raiz.pesoder++;
-                }else{
+                }else{    
+                    int eant=this.Raiz.der.pesoder-this.Raiz.der.pesoizq;
                     NodoArchivo temp=this.insertar2(nuevo,this.Raiz.der);
+                    int enuevo=this.Raiz.der.pesoder-this.Raiz.der.pesoizq;
                     if (temp!=null) {
                         this.Raiz.der=temp;
                     }
-                    if ((this.Raiz.der.pesoder-this.Raiz.der.pesoizq)!=0){
+                    if (eant!=enuevo && enuevo!=0){
                         this.Raiz.pesoder++;
                     }
-                    if ((this.Raiz.pesoder-this.Raiz.pesoizq)>1 && (this.Raiz.izq.pesoder-this.Raiz.izq.pesoizq)>0) {                        
+                    if ((this.Raiz.pesoder-this.Raiz.pesoizq)>1 && (this.Raiz.der.pesoder-this.Raiz.der.pesoizq)>0) {                        
                         this.Raiz=ESD(this.Raiz);
                     }
                     else if((this.Raiz.pesoder-this.Raiz.pesoizq)>1){
@@ -75,18 +84,19 @@ public class Archivos {
     }
     
     public NodoArchivo insertar2(NodoArchivo nuevo,NodoArchivo raiz) throws IOException{
-        if (raiz.nombre.compareTo(nuevo.nombre)>0) {
+        if ((raiz.nombre+"."+raiz.extension).compareTo(nuevo.nombre+"."+nuevo.extension)>0) {
             if (raiz.izq==null) {
                 raiz.izq=nuevo;
                 raiz.pesoizq++;
             }else{
+                int eant=raiz.izq.pesoder-raiz.izq.pesoizq;
                 NodoArchivo temp=insertar2(nuevo,raiz.izq);  
-                int equilibrio=raiz.izq.pesoder-raiz.izq.pesoizq;
+                int enuevo=raiz.izq.pesoder-raiz.izq.pesoizq;
                 if (temp!=null) {
                     raiz.izq=temp;
                 }
-                if (equilibrio!=0){
-                    raiz.pesoizq++;
+                if (eant!=enuevo && enuevo!=0){
+                        raiz.pesoizq++;
                 }
                 if ((raiz.pesoder-raiz.pesoizq)<-1 && (raiz.izq.pesoder-raiz.izq.pesoizq)<0) {                        
                     raiz=ESI(raiz);
@@ -98,19 +108,21 @@ public class Archivos {
                 }
             }
         }
-        else if(raiz.nombre.compareTo(nuevo.nombre)<0){
+        else if((raiz.nombre+"."+raiz.extension).compareTo(nuevo.nombre+"."+nuevo.extension)<0){
             if (raiz.der==null) {
                 raiz.der=nuevo;
                 raiz.pesoder++;
             }else{
+                int eant=raiz.der.pesoder-raiz.der.pesoizq;
                 NodoArchivo temp=this.insertar2(nuevo,raiz.der);
+                int enuevo=raiz.der.pesoder-raiz.der.pesoizq;
                 if (temp!=null) {
                     raiz.der=temp;
                 }
-                if ((raiz.der.pesoder-raiz.der.pesoizq)!=0){
+                if (eant!=enuevo && enuevo!=0){
                     raiz.pesoder++;
                 }
-                if ((raiz.pesoder-raiz.pesoizq)>1 && (raiz.izq.pesoder-raiz.izq.pesoizq)>0) {                        
+                if ((raiz.pesoder-raiz.pesoizq)>1 && (raiz.der.pesoder-raiz.der.pesoizq)>0) {                        
                     raiz=ESD(raiz);
                     return raiz;
                 }
@@ -130,12 +142,20 @@ public class Archivos {
         System.out.println("equilibrio simple izquierda");
         NodoArchivo n=raiz;
         NodoArchivo n1=raiz.izq;
+        int ponder=n.pesoder;
+        int ponizq=n.pesoizq-2;
+        int pon1der=n1.pesoder+1;
+        int pon1izq=n1.pesoizq;
+        
         n.izq=n1.der;
         n1.der=n;
         n=n1;
         
-        n.der.pesoizq-=2;
-        n.pesoder++;
+        n.pesoder=pon1der;
+        n.pesoizq=pon1izq;
+        n.izq.pesoder=ponder;
+        n.izq.pesoizq=ponizq;
+        
         return n;
     }
     
@@ -145,25 +165,44 @@ public class Archivos {
         NodoArchivo n1=raiz.izq;
         NodoArchivo n2=raiz.izq.der;
         int equilibrio=n2.pesoder-n2.pesoizq;
+        int ponder=0,ponizq=0,pon1der=0,pon1izq=0,pon2der=0,pon2izq=0;
+        switch (equilibrio) {
+            case 1:
+                ponizq=n.pesoizq-2;
+                pon1der=n1.pesoder-2;
+                pon2der=n2.pesoder+1;
+                pon2izq=n2.pesoizq+2;
+                break;
+            case -1:
+                ponizq=n.pesoizq-3;
+                pon1der=n1.pesoder-1;
+                pon2der=n2.pesoder+2;
+                pon2izq=n2.pesoizq+1;
+                break;
+            case 0:
+                ponizq=n.pesoizq-2;
+                pon1der=n1.pesoder-1;
+                pon2der=n2.pesoder+1;
+                pon2izq=n2.pesoizq+1;
+                break;
+            default:
+                break;
+        }
+        ponder=n.pesoder;
+        pon1izq=n1.pesoizq;
+        
         n1.der=n2.izq;
         n2.izq=n1;
         n.izq=n2.der;
         n2.der=n;
         n=n2;     
         
-        n.pesoder=raiz.pesoder+1;
-        n.pesoizq=raiz.pesoizq-1;
-        if (equilibrio == 1) {
-            n.izq.pesoder-=2;
-        }else{
-            n.izq.pesoder--;
-        }
-        if (equilibrio == -1){
-            n.der.pesoizq-=3;
-        }else{
-            n.der.pesoizq-=2;
-        }
-               
+        n.pesoder=pon2der;
+        n.pesoizq=pon2izq;
+        n.izq.pesoder=pon1der;
+        n.izq.pesoizq=pon1izq;
+        n.der.pesoder=ponder;
+        n.der.pesoizq=ponizq;
         return n;
     }
     
@@ -171,13 +210,19 @@ public class Archivos {
         System.out.println("equilibrio simple derecha");
         NodoArchivo n=raiz;
         NodoArchivo n1=raiz.der;
-
+        int ponder=n.pesoder-2;
+        int ponizq=n.pesoizq;
+        int pon1der=n1.pesoder;
+        int pon1izq=n1.pesoizq+1;
+        
         n.der=n1.izq;
         n1.izq=n;                   
         n=n1;       
-
-        n.izq.pesoder-=2;
-        n.pesoder++;        
+        
+        n.pesoder=pon1der;
+        n.pesoizq=pon1izq;
+        n.izq.pesoder=ponder;
+        n.izq.pesoizq=ponizq;
         return n;
     }
     
@@ -187,26 +232,62 @@ public class Archivos {
         NodoArchivo n1=raiz.der;
         NodoArchivo n2=raiz.der.izq;
         int equilibrio=n2.pesoder-n2.pesoizq;
+        int ponder=0,ponizq=0,pon1der=0,pon1izq=0,pon2der=0,pon2izq=0;
+        switch (equilibrio) {
+            case -1:
+                ponder=n.pesoder-2;
+                pon1izq=n1.pesoizq-2;
+                pon2der=n2.pesoder+2;
+                pon2izq=n2.pesoizq+1;
+                break;
+            case 1:
+                ponder=n.pesoder-3;
+                pon1izq=n1.pesoizq-1;
+                pon2der=n2.pesoder+1;
+                pon2izq=n2.pesoizq+2;
+                break;
+            case 0:
+                ponder=n.pesoder-2;
+                pon1izq=n1.pesoizq-1;
+                pon2der=n2.pesoder+1;
+                pon2izq=n2.pesoizq+1;
+                break;
+            default:
+                break;
+        }
+        ponizq=n.pesoizq;
+        pon1der=n1.pesoder;
+        
+        
         n1.izq=n2.der;
         n2.der=n1;
         n.der=n2.izq;
         n2.izq=n;
         n=n2;
         
-        n.pesoder=raiz.pesoder-1;
-        n.pesoizq=raiz.pesoizq+1;
-        if (equilibrio == 1) {
-            n.der.pesoizq-=2;
-        }else{
-            n.der.pesoizq--;
-        }
-        if (equilibrio == -1){
-            n.izq.pesoder-=3;
-        }else{
-            n.izq.pesoder-=2;
-        }
+        n.pesoder=pon2der;
+        n.pesoizq=pon2izq;
+        n.der.pesoder=pon1der;
+        n.der.pesoizq=pon1izq;
+        n.izq.pesoder=ponder;
+        n.izq.pesoizq=ponizq;
         
         return n;
+    }
+    
+    public NodoArchivo Archivo(NodoArchivo actual,String nombre,String extension){
+        NodoArchivo retornar=null;
+        if (actual.nombre.equals(nombre) && actual.extension.equals(extension)) {
+            System.out.println("Archivo encotrado");
+            retornar=actual;
+        }else{
+            if ((actual.nombre+"."+actual.extension).compareTo(nombre+"."+extension)>0 && actual.izq!=null){
+                retornar = Archivo(actual.izq,nombre,extension);
+            }else if((actual.nombre+"."+actual.extension).compareTo(nombre+"."+extension)<0 && actual.der!=null){
+                retornar = Archivo(actual.der,nombre,extension);
+            }
+        }
+        return retornar;
     }
     
     public String ListaArchivos(){
@@ -235,50 +316,66 @@ public class Archivos {
         return archivo;
     }
     
-    public String[] BuscarArchivo(String nombre){
+    public String[] BuscarArchivo(String nombre,String extension){
         String[] archivo=new String[4];
-        if (this.Raiz.nombre.equals(nombre)) {
+        if (this.Raiz.nombre.equals(nombre) && this.Raiz.extension.equals(extension)) {
+            System.out.println("Encontrado");
             archivo[0]=this.Raiz.nombre;
             archivo[1]=this.Raiz.extension;
             archivo[2]=this.Raiz.contenido;
             archivo[3]=this.Raiz.fecha;
         }else{
-            if (this.Raiz.nombre.compareTo(nombre)>0){
+            if ((this.Raiz.nombre+"."+this.Raiz.extension).compareTo(nombre+"."+extension)>0){
                 if (this.Raiz.izq!=null) {
-                    BuscarArchivo2(nombre,this.Raiz.izq);
+                    archivo=BuscarArchivo2(nombre,extension,this.Raiz.izq);
                 }
-            }else if(this.Raiz.nombre.compareTo(nombre)<0){
+            }else if((this.Raiz.nombre+"."+this.Raiz.extension).compareTo(nombre+"."+extension)<0){
                 if (this.Raiz.der!=null){
-                    BuscarArchivo2(nombre,this.Raiz.der);
+                    archivo=BuscarArchivo2(nombre,extension,this.Raiz.der);
                 }
+            }else{
+                System.out.println("Fallo al encontrarlo");
             }
         }
         return archivo;
     }
     
-    public String[] BuscarArchivo2(String nombre,NodoArchivo actual){
+    public String[] BuscarArchivo2(String nombre,String extension,NodoArchivo actual){
         String[] archivo=new String[4];
-        if (actual.nombre.equals(nombre)) {
+        if (actual.nombre.equals(nombre) && actual.extension.equals(extension)) {
+            System.out.println("Encontrado");
             archivo[0]=actual.nombre;
             archivo[1]=actual.extension;
             archivo[2]=actual.contenido;
             archivo[3]=actual.fecha;
         }else{
-            if (actual.nombre.compareTo(nombre)>0){
+            if ((actual.nombre+"."+actual.extension).compareTo(nombre+"."+extension)>0){
                 if (actual.izq!=null) {
-                    archivo=BuscarArchivo2(nombre,actual.izq);
+                    archivo=BuscarArchivo2(nombre,extension,actual.izq);
                 }
-            }else if(actual.nombre.compareTo(nombre)<0){
+            }else if((actual.nombre+"."+actual.extension).compareTo(nombre+"."+extension)<0){
                 if (actual.der!=null){
-                    archivo=BuscarArchivo2(nombre,actual.der);
+                    archivo=BuscarArchivo2(nombre,extension,actual.der);
                 }
+            }else{
+                System.out.println("Fallo al encontrarlo");
             }
         }
         return archivo;
     }
     
-    public void BuscaraEliminar(String nombre){
-        if (this.Raiz.nombre.equals(nombre)) {
+    public void ModContenidoArchivo(String nombre,String extension,String contenidonuevo){
+        NodoArchivo modificar=Archivo(this.Raiz,nombre,extension);
+        try{
+            modificar.contenido=contenidonuevo;
+            modificar.extension=extension;
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    
+    public void BuscaraEliminar(String nombre,String extension){
+        if (this.Raiz.nombre.equals(nombre) && this.Raiz.extension.equals(extension)) {
             System.out.println("Encontrado");
             if (this.Raiz.der==null && this.Raiz.izq==null) {
                 System.out.println("Caso 0");
@@ -323,9 +420,9 @@ public class Archivos {
                 }
             }
         }else{
-            if (this.Raiz.nombre.compareTo(nombre)>0){
+            if ((this.Raiz.nombre+"."+this.Raiz.extension).compareTo(nombre+"."+extension)>0){
                 if (this.Raiz.izq!=null) {
-                    NodoArchivo Nodo=BuscaraEliminar(nombre,this.Raiz.izq);
+                    NodoArchivo Nodo=BuscaraEliminar(nombre,extension,this.Raiz.izq);
                     if (this.eliminar) {
                         this.Raiz.izq=Nodo;
                         this.Raiz.pesoizq--;
@@ -337,9 +434,9 @@ public class Archivos {
                         }
                     }
                 }
-            }else if(this.Raiz.nombre.compareTo(nombre)<0){
+            }else if((this.Raiz.nombre+"."+this.Raiz.extension).compareTo(nombre+"."+extension)<0){
                 if (this.Raiz.der!=null){
-                    NodoArchivo Nodo=BuscaraEliminar(nombre,this.Raiz.der);
+                    NodoArchivo Nodo=BuscaraEliminar(nombre,extension,this.Raiz.der);
                     if (this.eliminar) {
                         this.Raiz.der=Nodo;
                         this.Raiz.pesoder--;
@@ -356,9 +453,9 @@ public class Archivos {
         this.eliminar=false;
     }
     
-    public NodoArchivo BuscaraEliminar(String nombre,NodoArchivo actual){
+    public NodoArchivo BuscaraEliminar(String nombre,String extension,NodoArchivo actual){
         NodoArchivo Nodo=null;
-        if (actual.nombre.equals(nombre)) {
+        if (actual.nombre.equals(nombre) && actual.extension.equals(extension)) {
             System.out.println("Encontrado");
             this.eliminar=true;
             if (actual.der==null && actual.izq==null) {
@@ -405,9 +502,9 @@ public class Archivos {
             }
             Nodo=actual;
         }else{
-            if (actual.nombre.compareTo(nombre)>0){
+            if ((actual.nombre+"."+actual.extension).compareTo(nombre+"."+extension)>0){
                 if (actual.izq!=null) {
-                    Nodo=BuscaraEliminar(nombre,actual.izq);
+                    Nodo=BuscaraEliminar(nombre,extension,actual.izq);
                     if (this.eliminar) {
                         actual.izq=Nodo;
                         actual.pesoizq--;
@@ -419,9 +516,9 @@ public class Archivos {
                         }
                     }
                 }
-            }else if(actual.nombre.compareTo(nombre)<0){
+            }else if((actual.nombre+"."+actual.extension).compareTo(nombre+"."+extension)<0){
                 if (actual.der!=null){
-                    Nodo=BuscaraEliminar(nombre,actual.der);
+                    Nodo=BuscaraEliminar(nombre,extension,actual.der);
                     if (this.eliminar) {
                         actual.der=Nodo;
                         actual.pesoder--;
@@ -480,20 +577,25 @@ public class Archivos {
         return Aeliminar;
     }
     
-    public void graficar() throws IOException{
+    public File graficar() throws IOException{
         File file=new File("arbol.dot");
         BufferedWriter bw;
         bw=new BufferedWriter(new FileWriter(file));
         String archivo;
         archivo="digraph pila{ \n";
         archivo+="node [shape=\"record\"]; \n";
-        archivo+=this.Raiz.nombre+" [ label = \"{"+this.Raiz.nombre+"."+this.Raiz.extension+"|"+"izq: "+this.Raiz.pesoizq+", der: "+this.Raiz.pesoder+"}\"];\n";
+        archivo+=this.Raiz.nombre+this.Raiz.extension+" [ label = \"{"
+                +this.Raiz.nombre+"."+this.Raiz.extension+"|"
+                +this.Raiz.contenido+"|"
+                +this.Raiz.fecha+"|"
+                +"izq: "+(this.Raiz.pesoizq+"der: "+this.Raiz.pesoder)
+                +"}\"];\n";
         if (this.Raiz.izq!=null) {
-            archivo+=this.Raiz.nombre+"->"+this.Raiz.izq.nombre+"\n";    
+            archivo+=this.Raiz.nombre+this.Raiz.extension+"->"+this.Raiz.izq.nombre+this.Raiz.izq.extension+"\n";    
             archivo+=graficar1(this.Raiz.izq);
         }
         if (this.Raiz.der!=null) {
-            archivo+=this.Raiz.nombre+"->"+this.Raiz.der.nombre+"\n";
+            archivo+=this.Raiz.nombre+this.Raiz.extension+"->"+this.Raiz.der.nombre+this.Raiz.der.extension+"\n";
             archivo+=graficar1(this.Raiz.der);
         }
         archivo+="}";
@@ -506,22 +608,23 @@ public class Archivos {
             System.out.println (ioe);
         }
         File imagen=new File("imagena.jpg");
-        try{
-           Desktop.getDesktop().open(imagen);
-        }catch(IOException e){
-            System.out.println(e);
-        }
+        return imagen;
     }
     
     public String graficar1(NodoArchivo actual){
         String archivo="";
-        archivo+=actual.nombre+" [ label = \"{"+actual.nombre+"."+actual.extension+"|"+"izq: "+actual.pesoizq+", der: "+actual.pesoder+"}\"];\n";
+        archivo+=actual.nombre+actual.extension+" [ label = \"{"
+                +actual.nombre+"."+actual.extension+"|"
+                +actual.contenido+"|"
+                +actual.fecha+"|"
+                +"izq: "+actual.pesoizq+" der: "+actual.pesoder
+                +"}\"];\n";
         if (actual.izq!=null) {
-            archivo+=actual.nombre+"->"+actual.izq.nombre+"\n";
+            archivo+=actual.nombre+actual.extension+"->"+actual.izq.nombre+actual.izq.extension+"\n";
             archivo+=graficar1(actual.izq);
         }
         if (actual.der!=null) {
-            archivo+=actual.nombre+"->"+actual.der.nombre+"\n";
+            archivo+=actual.nombre+actual.extension+"->"+actual.der.nombre+actual.der.extension+"\n";
             archivo+=graficar1(actual.der);
         }
         return archivo;

@@ -22,16 +22,8 @@ public class EDD_Drive {
     static Bitacora bitacora=new Bitacora();
     
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException{
-        Archivos arch=new Archivos();
-        arch.insertar1("mama", "txt", "hola", "0");
-        arch.insertar1("papa", "txt", "hola", "0");
-        arch.insertar1("lila", "txt", "hola", "0");
-        arch.insertar1("kilo", "txt", "hola", "0");        
-        arch.insertar1("jaula", "txt", "hola", "0");
-        arch.BuscaraEliminar("mama");
-        arch.graficar();
-        /*user.Insertar("Admin","Admin");
+        user.Insertar("Admin","Admin");
         Ventana ventana =new Ventana();
-        ventana.setVisible(true);*/
+        ventana.setVisible(true);
     }
 }

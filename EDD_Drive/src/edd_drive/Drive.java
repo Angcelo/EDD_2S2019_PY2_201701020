@@ -5,10 +5,18 @@
  */
 package edd_drive;
 
-import java.awt.FlowLayout;
+import java.awt.Desktop;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.logging.Level;
@@ -16,11 +24,15 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -57,10 +69,14 @@ public class Drive extends javax.swing.JFrame {
         jParc = new javax.swing.JPanel();
         btncreararc = new javax.swing.JButton();
         btnuparc = new javax.swing.JButton();
-        jPcontenido = new javax.swing.JPanel();
         btnsalir = new javax.swing.JButton();
         btnbitacora = new javax.swing.JButton();
         btnreportecar = new javax.swing.JButton();
+        btnreportarchivos = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPcontenido = new javax.swing.JPanel();
+        btnupuser = new javax.swing.JButton();
+        brnreportuser = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("drive "+EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
@@ -97,7 +113,7 @@ public class Drive extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPcarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btncrearcar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnmodcar, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(btnmodcar, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                     .addComponent(btnelicar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -122,6 +138,11 @@ public class Drive extends javax.swing.JFrame {
         });
 
         btnuparc.setText("Subir");
+        btnuparc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnuparcActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jParcLayout = new javax.swing.GroupLayout(jParc);
         jParc.setLayout(jParcLayout);
@@ -130,7 +151,7 @@ public class Drive extends javax.swing.JFrame {
             .addGroup(jParcLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jParcLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btncreararc, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(btncreararc, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                     .addComponent(btnuparc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -142,8 +163,6 @@ public class Drive extends javax.swing.JFrame {
                 .addComponent(btnuparc)
                 .addContainerGap())
         );
-
-        jPcontenido.setBorder(javax.swing.BorderFactory.createTitledBorder("Drive"));
 
         btnsalir.setText("Salir");
         btnsalir.addActionListener(new java.awt.event.ActionListener() {
@@ -166,6 +185,37 @@ public class Drive extends javax.swing.JFrame {
             }
         });
 
+        btnreportarchivos.setText("Reporte Archivos");
+        btnreportarchivos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnreportarchivosActionPerformed(evt);
+            }
+        });
+
+        jScrollPane1.setHorizontalScrollBar(null);
+        jScrollPane1.setMaximumSize(new java.awt.Dimension(27, 27));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(830, 500));
+
+        jPcontenido.setBorder(javax.swing.BorderFactory.createTitledBorder("Drive"));
+        jPcontenido.setAutoscrolls(true);
+        jPcontenido.setMaximumSize(new java.awt.Dimension(22, 35));
+        jPcontenido.setPreferredSize(new java.awt.Dimension(830, 500));
+        jScrollPane1.setViewportView(jPcontenido);
+
+        btnupuser.setText("Cargar Usuarios");
+        btnupuser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnupuserActionPerformed(evt);
+            }
+        });
+
+        brnreportuser.setText("Reporte Usuarios");
+        brnreportuser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                brnreportuserActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -177,25 +227,34 @@ public class Drive extends javax.swing.JFrame {
                     .addComponent(jParc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnsalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnbitacora, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnreportecar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnreportecar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnreportarchivos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnupuser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(brnreportuser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPcontenido, javax.swing.GroupLayout.PREFERRED_SIZE, 829, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 830, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPcontenido, javax.swing.GroupLayout.PREFERRED_SIZE, 499, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPcar, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jParc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnreportecar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnupuser)
+                        .addGap(97, 97, 97)
                         .addComponent(btnbitacora)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(brnreportuser)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnreportarchivos)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnreportecar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnsalir)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -208,17 +267,18 @@ public class Drive extends javax.swing.JFrame {
         String name=JOptionPane.showInputDialog(null,"Nombre de la carpeta");
         if(name!=null){
             System.out.println("Carpeta en la que se va a insertar"+this.carpetaactual);
-            EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.insertar(this.carpetaactual, name);
-            Calendar calendario = Calendar.getInstance();
-            int hora =calendario.get(Calendar.HOUR_OF_DAY);
-            int minutos = calendario.get(Calendar.MINUTE);
-            int segundos = calendario.get(Calendar.SECOND);
-            int año=calendario.get(Calendar.YEAR);
-            int mes=calendario.get(Calendar.MONTH)+1;
-            int dia=calendario.get(Calendar.DATE);
-            String fecha=dia+"/"+mes+"/"+año;
-            String tiempo=hora + ":" + minutos + ":" + segundos;
-            EDD_Drive.bitacora.insertar(fecha, tiempo, "Creacion carpeta "+name ,EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
+            if(EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.insertar(this.carpetaactual, name)){
+                Calendar calendario = Calendar.getInstance();
+                int hora =calendario.get(Calendar.HOUR_OF_DAY);
+                int minutos = calendario.get(Calendar.MINUTE);
+                int segundos = calendario.get(Calendar.SECOND);
+                int año=calendario.get(Calendar.YEAR);
+                int mes=calendario.get(Calendar.MONTH)+1;
+                int dia=calendario.get(Calendar.DATE);
+                String fecha=dia+"/"+mes+"/"+año;
+                String tiempo=hora + ":" + minutos + ":" + segundos;
+                EDD_Drive.bitacora.insertar(fecha, tiempo, "Creacion carpeta "+name ,EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
+            }
         }
         crearbotones(this.carpetaactual,this.direccion);
     }//GEN-LAST:event_btncrearcarActionPerformed
@@ -226,12 +286,15 @@ public class Drive extends javax.swing.JFrame {
     private void btncreararcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncreararcActionPerformed
         javax.swing.JTextField nombre=new javax.swing.JTextField(10);
         javax.swing.JTextArea contenido=new javax.swing.JTextArea(10, 10);
+        JScrollPane scroll = new JScrollPane(contenido);
+        contenido.setLineWrap(true);
+        contenido.setWrapStyleWord(true);
         JPanel mypanel=new JPanel();
         mypanel.add(new JLabel("nombre:"));
         mypanel.add(nombre);
         mypanel.add(javax.swing.Box.createHorizontalStrut(25));
         mypanel.add(new JLabel("contenido:"));
-        mypanel.add(contenido);
+        mypanel.add(scroll);
         if (JOptionPane.showConfirmDialog(null, mypanel,"Crear Archivo",JOptionPane.OK_CANCEL_OPTION)==JOptionPane.OK_OPTION) {
             Pattern patron=Pattern.compile(".+\\..+");
             Matcher encaja=patron.matcher(nombre.getText());
@@ -239,8 +302,12 @@ public class Drive extends javax.swing.JFrame {
             System.out.println(contenido.getText());
             if(encaja.find() && !contenido.getText().equals("")){
                 String[] nomext=nombre.getText().split("\\.");
+                String nombrearchivo=nomext[0];
+                for (int i = 1; i < nomext.length-1; i++) {
+                    nombrearchivo+="."+nomext[i];
+                }
                 try {
-                    EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.InsertarArchivo(this.carpetaactual, nomext[0], nomext[1],contenido.getText());
+                    EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.InsertarArchivo(this.carpetaactual, nombrearchivo, nomext[nomext.length-1],contenido.getText());
                     Calendar calendario = Calendar.getInstance();
                     int hora =calendario.get(Calendar.HOUR_OF_DAY);
                     int minutos = calendario.get(Calendar.MINUTE);
@@ -253,8 +320,12 @@ public class Drive extends javax.swing.JFrame {
                     EDD_Drive.bitacora.insertar(fecha, tiempo, "Creacion archivo " + nombre.getText() ,EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
                     crearbotones(this.carpetaactual,this.direccion);
                 } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "No se pudo crear archivo");
                     Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }else{
+                JOptionPane.showMessageDialog(null, "No posee extension");
+                System.out.println("No Posee extension");
             }
         }
     }//GEN-LAST:event_btncreararcActionPerformed
@@ -323,7 +394,9 @@ public class Drive extends javax.swing.JFrame {
 
     private void btnbitacoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbitacoraActionPerformed
         try {
-            EDD_Drive.bitacora.GraficarBitacora();
+            File imagenurl=EDD_Drive.bitacora.GraficarBitacora();
+            Imagenes ventanaimg=new Imagenes(imagenurl);
+            ventanaimg.setVisible(true);
         } catch (IOException ex) {
             Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -336,6 +409,157 @@ public class Drive extends javax.swing.JFrame {
             Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnreportecarActionPerformed
+
+    private void btnreportarchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnreportarchivosActionPerformed
+        try {
+            File fileimagen=EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.GraficarArchivos(this.carpetaactual);
+            Imagenes ventanaimg=new Imagenes(fileimagen);
+            ventanaimg.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnreportarchivosActionPerformed
+
+    private void btnuparcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnuparcActionPerformed
+        String insertados="";
+        JFileChooser selectorArchivos = new JFileChooser();
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos CSV", "csv");
+        selectorArchivos.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        selectorArchivos.setFileFilter(filtro);
+        selectorArchivos.showOpenDialog(this);
+        File archivo = selectorArchivos.getSelectedFile();
+        if ((archivo == null) || (archivo.getName().equals(""))) {
+            return;
+        }
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(archivo));
+            String linea;
+            boolean primero=true;
+            int arch=0;
+            int cont=0;
+            while((linea=br.readLine())!=null){
+                String[] texto=linea.split(",");
+                if (primero) {
+                    for (int i = 0; i < texto.length; i++) {
+                        if (texto[i].toLowerCase().equals("archivo")) {
+                           arch=i; 
+                            System.out.println("Archivos "+arch);
+                        }else if(texto[i].toLowerCase().equals("contenido")){
+                            cont=i;
+                            System.out.println("Contenidos "+ cont);
+                        }else{
+                            JOptionPane.showMessageDialog(null, "No posee las columnas necesarias");
+                        }
+                    }
+                    primero=false;
+                }else{
+                    String[] nomext=texto[arch].split("\\.");
+                    String nombre=nomext[0];
+                    for (int i = 1; i < nomext.length-1; i++) {
+                        nombre+=nomext[i];
+                    }
+                    System.out.println("Nombre: "+nombre+" Extension: "+nomext[nomext.length-1]+" Contenido: "+texto[cont]);
+                    EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.InsertarArchivo(this.carpetaactual, nombre, nomext[nomext.length-1],texto[cont]);
+                    insertados+=nombre+"."+ nomext[nomext.length-1]+", ";
+                }
+            }     
+            Calendar calendario = Calendar.getInstance();
+                int hora =calendario.get(Calendar.HOUR_OF_DAY);
+                int minutos = calendario.get(Calendar.MINUTE);
+                int segundos = calendario.get(Calendar.SECOND);
+                int año=calendario.get(Calendar.YEAR);
+                int mes=calendario.get(Calendar.MONTH)+1;
+                int dia=calendario.get(Calendar.DATE);
+                String fecha=dia+"/"+mes+"/"+año;
+                String tiempo=hora + ":" + minutos + ":" + segundos;
+            if (!insertados.equals("")) {
+                EDD_Drive.bitacora.insertar(fecha, tiempo, "Insercion de archivos: "+insertados,EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
+            }
+            crearbotones(this.carpetaactual,this.direccion);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnuparcActionPerformed
+
+    private void btnupuserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnupuserActionPerformed
+        String errores="";
+        String usuarios="";
+        JFileChooser selectorArchivos = new JFileChooser();
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos CSV", "csv");
+        selectorArchivos.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        selectorArchivos.setFileFilter(filtro);
+        selectorArchivos.showOpenDialog(this);
+        File archivo = selectorArchivos.getSelectedFile();
+        if ((archivo == null) || (archivo.getName().equals(""))) {
+            return;
+        }
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(archivo));
+            String linea;
+            boolean primero=true;
+            int user=0;
+            int pass=0;
+            while((linea=br.readLine())!=null){
+                String[] texto=linea.split(",");
+                if (primero) {
+                    for (int i = 0; i < texto.length; i++) {
+                        if (texto[i].toLowerCase().equals("usuario")) {
+                           user=i; 
+                            System.out.println("Archivos "+user);
+                        }
+                        if(texto[i].toLowerCase().equals("password")){
+                            pass=i;
+                            System.out.println("Contenidos "+ pass);
+                        }
+                    }
+                    primero=false;
+                }else{
+                    if (texto[pass].length()<8) {
+                        errores+="Usuario: "+texto[user]+" no cumple con la contraseña \n";
+                    }else{
+                        if(EDD_Drive.user.Insertar(texto[user], texto[pass])){
+                            usuarios+=texto[user]+", ";
+                        }else{
+                            errores+="Usuario"+texto[user]+" usuario ya existe \n";
+                        }
+                    }
+                }
+            }  
+            Calendar calendario = Calendar.getInstance();
+                int hora =calendario.get(Calendar.HOUR_OF_DAY);
+                int minutos = calendario.get(Calendar.MINUTE);
+                int segundos = calendario.get(Calendar.SECOND);
+                int año=calendario.get(Calendar.YEAR);
+                int mes=calendario.get(Calendar.MONTH)+1;
+                int dia=calendario.get(Calendar.DATE);
+                String fecha=dia+"/"+mes+"/"+año;
+                String tiempo=hora + ":" + minutos + ":" + segundos;
+            if (!usuarios.equals("")) {
+                EDD_Drive.bitacora.insertar(fecha, tiempo, "Insercion de usuarios: "+usuarios,EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
+            }
+            if (!errores.equals("")) {
+                JOptionPane.showMessageDialog(null, errores);
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnupuserActionPerformed
+
+    private void brnreportuserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnreportuserActionPerformed
+        try {
+            File imagen=EDD_Drive.user.Graficar();
+            Imagenes ventana=new Imagenes(imagen);
+            ventana.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_brnreportuserActionPerformed
 
     /**
      * @param args the command line arguments
@@ -375,34 +599,36 @@ public class Drive extends javax.swing.JFrame {
     
     private void crearbotones(String carpeta,String direccion){
         jPcontenido.removeAll();
-        jPcontenido.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), direccion, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 12)));
+        String direccion2=direccion.replaceAll("-[0-9]+", "");
+        jPcontenido.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), direccion2, javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 12)));
         javax.swing.JButton btnregresar=new javax.swing.JButton("\n...");
         btnregresar.setIcon(defaultIcon);
+        btnregresar.setHorizontalTextPosition( SwingConstants.CENTER );
+        btnregresar.setVerticalTextPosition( SwingConstants.BOTTOM );
         btnregresar.addActionListener((ActionEvent e) -> 
                 {
-                    String[] carpetas=Arrays.asList(this.direccion.split("/")).stream().filter(str -> !str.isEmpty()).collect(Collectors.toList()).toArray(new String[0]);
+                    String[] carpet=Arrays.asList(this.direccion.split("/")).stream().filter(str -> !str.isEmpty()).collect(Collectors.toList()).toArray(new String[0]);
                     String direccionnueva="";
-                    for (int i = 0; i < (carpetas.length-1); i++) {
+                    for (int i = 0; i < (carpet.length-1); i++) {
                             direccionnueva+="/";
-                            direccionnueva+=carpetas[i];        
+                            direccionnueva+=carpet[i];        
                     }
                     if(direccionnueva.equals("")){
                         this.direccion="/";
                         this.carpetaactual="/";
                     }else{
                         this.direccion=direccionnueva;
-                        System.out.println("carpeta nueva: "+carpetas[carpetas.length-2]);
-                        this.carpetaactual=carpetas[carpetas.length-2];
+                        System.out.println("carpeta nueva: "+carpet[carpet.length-2]);
+                        this.carpetaactual=carpet[carpet.length-2];
                     }
                     crearbotones(carpetaactual,this.direccion);
                 });
         jPcontenido.add(btnregresar);
         btnregresar.repaint();
-        String carp=EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.BuscarArchivos(carpeta);
-        String arch=EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.SearchArchivo(carpeta);
+        String carp=EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.ListarCarpetas(carpeta);
+        String arch=EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.ListarArchivos(carpeta);
         System.out.println("esta es la lista de archivos: "+arch);
         String arraycarpetas[]=carp.split(",");
-        
         String arrayarchivos[]=arch.split(",");
         this.carpetas=new javax.swing.JButton[arraycarpetas.length];
         this.archivos=new javax.swing.JButton[arrayarchivos.length];
@@ -417,10 +643,12 @@ public class Drive extends javax.swing.JFrame {
                 String carpetas2[]=arraycarpetas[i].split("/");
                 this.carpetas[i]=new javax.swing.JButton(carpetas2[carpetas2.length-1]);
                 this.carpetas[i].setIcon(defaultIcon);
+                this.carpetas[i].setHorizontalTextPosition( SwingConstants.CENTER );
+                this.carpetas[i].setVerticalTextPosition( SwingConstants.BOTTOM );
                 if (entero==0) {
                     this.carpetas[i].setActionCommand(this.carpetas[i].getText());
                 }else{
-                    this.carpetas[i].setActionCommand(this.carpetas[i].getText()+entero);
+                    this.carpetas[i].setActionCommand(this.carpetas[i].getText()+"-"+entero);
                 }
                 this.carpetas[i].addActionListener((ActionEvent e) -> 
                 {
@@ -439,20 +667,111 @@ public class Drive extends javax.swing.JFrame {
             if (!arrayarchivos[i].equals("")) {
                 this.archivos[i]=new javax.swing.JButton(arrayarchivos[i]);
                 this.archivos[i].setIcon(this.defaultIconarchivo);
-                this.archivos[i].addActionListener((ActionEvent e) -> 
-                {
+                this.archivos[i].setHorizontalTextPosition( SwingConstants.CENTER );
+                this.archivos[i].setVerticalTextPosition( SwingConstants.BOTTOM );
+                this.archivos[i].addActionListener((ActionEvent e) -> {
+                    Object[] options1 = { "Aceptar", "Modificar","Eliminar","Compartir","Descargar"};
                     javax.swing.JTextField nombre=new javax.swing.JTextField(10);
                     javax.swing.JTextArea contenido=new javax.swing.JTextArea(10, 10);
+                    JScrollPane scroll = new JScrollPane(contenido);
+                    contenido.setLineWrap(true);
+                    contenido.setWrapStyleWord(true);
                     nombre.setText(e.getActionCommand());
-                    String[] arraycontenido=EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.contenidoarchivo(this.carpetaactual, e.getActionCommand());
+                    String[] arraycontenido = EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.contenidoarchivo(Drive.this.carpetaactual, e.getActionCommand());
+                    System.out.println("Este es el contenido: "+arraycontenido[2]);
                     contenido.setText(arraycontenido[2]);
                     JPanel mypanel=new JPanel();
+                    mypanel.setLayout(new GridLayout(0,2));
                     mypanel.add(new JLabel("nombre:"));
                     mypanel.add(nombre);
-                    mypanel.add(javax.swing.Box.createHorizontalStrut(25));
                     mypanel.add(new JLabel("contenido:"));
-                    mypanel.add(contenido);
-                    JOptionPane.showConfirmDialog(null, mypanel,"Modificar Archivo",JOptionPane.OK_CANCEL_OPTION);
+                    mypanel.add(scroll);
+                    int result = JOptionPane.showOptionDialog(null, mypanel, e.getActionCommand(),
+                            JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE,
+                            null, options1, null);
+                    switch (result) {
+                        case 1:
+                            try {
+                                EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.modArchivo(Drive.this.carpetaactual, e.getActionCommand(), nombre.getText(), contenido.getText());
+                                Calendar calendario = Calendar.getInstance();
+                                int hora =calendario.get(Calendar.HOUR_OF_DAY);
+                                int minutos = calendario.get(Calendar.MINUTE);
+                                int segundos = calendario.get(Calendar.SECOND);
+                                int año=calendario.get(Calendar.YEAR);
+                                int mes=calendario.get(Calendar.MONTH)+1;
+                                int dia=calendario.get(Calendar.DATE);
+                                String fecha=dia+"/"+mes+"/"+año;
+                                String tiempo=hora + ":" + minutos + ":" + segundos;
+                                EDD_Drive.bitacora.insertar(fecha, tiempo, "Modificacion archivo: "+e.getActionCommand(),EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
+                            }catch (IOException ex) {
+                                try {
+                                    EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.InsertarArchivo(arraycontenido[0], arraycontenido[1], arraycontenido[2], arraycontenido[3]);
+                                } catch (IOException ex1) {
+                                    Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex1);
+                                }
+                                JOptionPane.showMessageDialog(null, "Modificacion no posible");
+                                Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            crearbotones(Drive.this.carpetaactual, Drive.this.direccion);
+                            break;
+                        case 2:
+                            EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.eliminararchivo(Drive.this.carpetaactual, e.getActionCommand());
+                            Calendar calendario = Calendar.getInstance();
+                            int hora =calendario.get(Calendar.HOUR_OF_DAY);
+                            int minutos = calendario.get(Calendar.MINUTE);
+                            int segundos = calendario.get(Calendar.SECOND);
+                            int año=calendario.get(Calendar.YEAR);
+                            int mes=calendario.get(Calendar.MONTH)+1;
+                            int dia=calendario.get(Calendar.DATE);
+                            String fecha=dia+"/"+mes+"/"+año;
+                            String tiempo=hora + ":" + minutos + ":" + segundos;
+                            EDD_Drive.bitacora.insertar(fecha, tiempo, "Eliminacion archivo: "+e.getActionCommand(),EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].usuario);
+                            crearbotones(Drive.this.carpetaactual, Drive.this.direccion);
+                            break;
+                        case 3:
+                            JPanel JPcompartir=new JPanel(new GridLayout(0,1));
+                            JComboBox jcbusers =new JComboBox();
+                            String[] usuarios=EDD_Drive.user.Listasusuarios();
+                            for (String usuario : usuarios) {
+                                if (usuario!=null || !"".equals(usuario)) {
+                                    jcbusers.addItem(usuario);
+                                }
+                            }
+                            JPcompartir.add(new JLabel("Elija usuario"));
+                            JPcompartir.add(jcbusers);
+                            int reply = JOptionPane.showConfirmDialog(null, JPcompartir, "Compartir", JOptionPane.YES_NO_OPTION);
+                            if (reply == JOptionPane.YES_OPTION) {
+                                int no=EDD_Drive.user.BuscarUsuario(jcbusers.getSelectedItem().toString());
+                                String[] nomext=e.getActionCommand().split("\\.");
+                                String nombrearchivo=nomext[0];
+                                for (int i1 = 1; i1 < nomext.length-1; i1++) {
+                                    nombrearchivo += "." + nomext[i1];
+                                }
+                                try {
+                                    EDD_Drive.user.usuarios[no].carpetas.InsertarArchivo("/",nombrearchivo,nomext[nomext.length-1],arraycontenido[2]);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            break;
+                        case 4:
+                            File descargar=new File(e.getActionCommand());
+                            BufferedWriter bw;
+                            {
+                                try {
+                                    bw=new BufferedWriter(new FileWriter(descargar));
+                                    bw.write(arraycontenido[2]);
+                                    bw.close();
+                                    Desktop.getDesktop().open(descargar);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
+                                    JOptionPane.showMessageDialog(null, "Error al abrir el archivo");
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 });
                 jPcontenido.add(this.archivos[i]);
             }  
@@ -461,22 +780,22 @@ public class Drive extends javax.swing.JFrame {
         jPcontenido.repaint(); 
         
     }
-    
-    private void eventocarpeta(java.awt.event.ActionEvent evt,String nombre) {                                            
-        
-    }  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton brnreportuser;
     private javax.swing.JButton btnbitacora;
     private javax.swing.JButton btncreararc;
     private javax.swing.JButton btncrearcar;
     private javax.swing.JButton btnelicar;
     private javax.swing.JButton btnmodcar;
+    private javax.swing.JButton btnreportarchivos;
     private javax.swing.JButton btnreportecar;
     private javax.swing.JButton btnsalir;
     private javax.swing.JButton btnuparc;
+    private javax.swing.JButton btnupuser;
     private javax.swing.JPanel jParc;
     private javax.swing.JPanel jPcar;
     private javax.swing.JPanel jPcontenido;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,10 +5,18 @@
  */
 package EDD;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -18,10 +26,11 @@ public class Usuarios {
     public NodoUsuario usuarios[]=new NodoUsuario[7];
     public int lleno=0;
     
-    public void Insertar(String usuario,String password) throws NoSuchAlgorithmException{
+    public boolean Insertar(String usuario,String password) throws NoSuchAlgorithmException{
         if (BuscarUsuario(usuario)!=-1) {
             System.out.println("Usuario existente");
-            return;
+            JOptionPane.showMessageDialog(null, "Usuario existente");
+            return false;
         }
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] encodedhash = digest.digest(usuario.getBytes(StandardCharsets.UTF_8));
@@ -37,9 +46,9 @@ public class Usuarios {
                 lleno++;
                 continuar=false;
             }else{
-                id=(id*id)+1;   
+                id=(id*id)+id+1;   
                 while (id>=usuarios.length) {
-                    id=id-usuario.length();
+                    id=Math.abs(id-usuario.length());
                 }
             }
         }
@@ -58,6 +67,7 @@ public class Usuarios {
             System.arraycopy(temp, 0, usuarios, 0, temp.length);
             System.out.println("aumento: "+usuarios.length);
         }
+        return true;
     }
     
     public boolean esPrimo(int numero){
@@ -92,6 +102,18 @@ public class Usuarios {
         return -1;
     }
     
+    public String[] Listasusuarios(){
+        String[] strusers=new String[this.lleno];
+        int iterador=0;
+        for (NodoUsuario usuario : usuarios) {
+            if (usuario != null) {
+                strusers[iterador] = usuario.usuario;
+                iterador++;
+            }
+        }
+        return strusers;
+    }
+    
     public boolean verificar(int indice,String pass) throws NoSuchAlgorithmException{
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] passencode = digest.digest(pass.getBytes(StandardCharsets.UTF_8));
@@ -100,5 +122,45 @@ public class Usuarios {
             return this.usuarios[indice].password.equals(passcode+"");   
         }
         return false;
+    }
+    
+    public File Graficar() throws IOException{
+        int iterador=0;
+        File file=new File("usuarios.dot");
+        BufferedWriter bw;
+        bw=new BufferedWriter(new FileWriter(file));
+        String archivo="digraph html { \n";
+	archivo+= "abc[shape = none, margin = 0, label = < \n";
+	archivo+= "<TABLE BORDER=\"0\" CELLBORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"4\"> \n";
+        archivo+="<TH>\n";
+         archivo+="  <TD>Índice</TD>\n";
+        archivo+="  <TD>Usuario</TD>\n";
+        archivo+="  <TD>Contraseña</TD>\n";
+        archivo+="</TH>\n";
+        for (NodoUsuario usuario : usuarios) {
+            archivo+="<TR>\n";
+            archivo+="<TD>"+iterador+"</TD>";
+            if (usuario!=null) {
+                archivo+="  <TD>"+usuario.usuario+"</TD>\n";
+                archivo+="  <TD>"+usuario.password+"</TD>\n";
+            }else{
+                archivo+="  <TD></TD>\n";
+                archivo+="  <TD></TD>\n";
+            }
+            archivo+="</TR>\n";
+            iterador++;
+        }
+        archivo+="</TABLE>>];";
+        archivo+="}";
+        bw.write(archivo);
+        bw.close();
+        try {
+            String cmd = "dot -Tjpg usuarios.dot -o usersimg.jpg"; //Comando de apagado en linux
+            Runtime.getRuntime().exec(cmd); 
+        } catch (IOException ioe) {
+            System.out.println (ioe);
+        }
+        File imagen=new File("usersimg.jpg");
+        return imagen;
     }
 }

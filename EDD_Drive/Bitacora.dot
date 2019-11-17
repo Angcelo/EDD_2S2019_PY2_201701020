@@ -1,4 +1,4 @@
 digraph pila{ 
 rankdir="LR";
 node [shape="record"]; 
-node0 [label="|Creacion archivohola.txt\nAdmin\n13/11/2019 14:58:13",height=2.5];}
+node0 [label="",height=2.5];}

@@ -8,6 +8,7 @@ package edd_drive;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -125,7 +126,8 @@ public class Registrar extends javax.swing.JFrame {
         if (password.equals(password2) && password.length()>=8) {
             if (!usuario.equals("") || !password.equals("")) {
                 try {
-                    EDD_Drive.user.Insertar(usuario, password);
+                    EDD_Drive.user.Insertar(usuario, password);                                        
+                    JOptionPane.showMessageDialog(null, "Registrado con existo");
                     System.out.println("Registrado");
                     this.dispose();
                 } catch (NoSuchAlgorithmException ex) {
@@ -133,11 +135,14 @@ public class Registrar extends javax.swing.JFrame {
                 }
             }else{
                 System.out.println("No deje casillas en blanco");
+                JOptionPane.showMessageDialog(null, "No deje casillas en blanco");
             }   
         }else if(password.length()<8){
             System.out.println("La contraseña debe contener al menos 8 caracteres");
+            JOptionPane.showMessageDialog(null, "La contraseña debe tener al menos 8 carácteres");
         }
         else{
+            JOptionPane.showMessageDialog(null, "No coincide la contraseña");
             System.out.println("No coinciden las contraseñas");
         }       
     }//GEN-LAST:event_btnregActionPerformed

@@ -8,6 +8,7 @@ package edd_drive;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -123,6 +124,7 @@ public class Ventana extends javax.swing.JFrame {
         int indice=EDD_Drive.user.BuscarUsuario(usuario);
         EDD_Drive.usuarioactual=indice;
         if (indice==-1) {
+           JOptionPane.showMessageDialog(null, "Usuario no existe");
            System.out.print("usuario no existente"); 
            txtpass.setText("");
            return;
@@ -135,6 +137,7 @@ public class Ventana extends javax.swing.JFrame {
                 dr.setVisible(true);
                 this.dispose();
             }else{
+                JOptionPane.showMessageDialog(null, "Contraseña no coincide");
                 System.out.print("contraseña incorrecta");
             }
         } catch (NoSuchAlgorithmException ex) {

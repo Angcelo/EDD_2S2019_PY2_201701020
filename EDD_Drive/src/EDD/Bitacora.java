@@ -34,7 +34,7 @@ public class Bitacora {
         }
     }
     
-    public void GraficarBitacora() throws IOException{
+    public File GraficarBitacora() throws IOException{
         File file=new File("Bitacora.dot");
         BufferedWriter bw;
         bw=new BufferedWriter(new FileWriter(file));
@@ -58,6 +58,6 @@ public class Bitacora {
             System.out.println (ioe);
         }
         File imagen=new File("imgBitacora.jpg");
-        Desktop.getDesktop().open(imagen);
+        return imagen;
     }
 }

@@ -9,6 +9,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -138,30 +139,30 @@ public class Carpetas {
         return false;
     }
     
-    public void insertar(String principal,String secundaria){
+    public boolean insertar(String principal,String secundaria){
         NodoCarpeta col=BuscarCol(principal);
         NodoCarpeta fil=BuscarFil(secundaria);  
         if (col!=null && fil!=null) {
             int iterador=1;
             if (interseccion(fil,principal+"/"+secundaria)) {
                 System.out.print("ya existe carpeta");
-                return;
+                return false;
             }
             while(fil!=null){
                 System.out.println(secundaria+(iterador-1));
                 if (interseccion(fil,principal+"/"+secundaria+(iterador-1))) {
                     System.out.print("ya existe carpeta");
-                    return;
+                    return false;
                 }
-                System.out.println(secundaria+iterador);
-                fil=BuscarFil(secundaria+iterador);
+                System.out.println(secundaria+"-"+iterador);
+                fil=BuscarFil(secundaria+"-"+iterador);
                 iterador++;
             }
             fil=CrearFil(secundaria);
             NodoCarpeta col2 =CrearCol(secundaria);
             iterador--;
-            fil.nombreindice=secundaria+iterador;
-            col2.nombreindice=secundaria+iterador;
+            fil.nombreindice=secundaria+"-"+iterador;
+            col2.nombreindice=secundaria+"-"+iterador;
         }else if (col!=null && fil==null){
             fil=CrearFil(secundaria);
             CrearCol(secundaria);
@@ -173,19 +174,19 @@ public class Carpetas {
         nuevo=InsertarCol(nuevo,fil);
         nuevo=InsertarFil(nuevo,col);
         System.out.println(nuevo.nombre+"("+nuevo.x+","+nuevo.y+")");
+        return true;
     }
     
-    public String BuscarArchivos(String inicio){
+    public String ListarCarpetas(String inicio){
         NodoCarpeta padre=this.BuscarCol(inicio);
         String carpetas="";
-        int numero=0;
         if (padre.sup!=null) {
             padre=padre.sup;
             while(padre!=null){
-                for(char i:padre.nombreindice.toCharArray()){
-                    try{
-                        numero=Integer.parseInt(i+"");
-                    }catch(NumberFormatException e){}
+                String numero=padre.nombreindice.replace(padre.nombre, "");
+                numero=numero.replace("-","");
+                if (numero.equals("")) {
+                    numero="0";
                 }
                 System.out.println("numero completo:" +numero);
                 carpetas+=padre.nombre+"#"+numero+"#,";
@@ -199,14 +200,17 @@ public class Carpetas {
     public void InsertarArchivo(String inicio,String nombre,String extension,String contenido) throws IOException{
         NodoCarpeta padre=this.BuscarCol(inicio);
         Calendar calendario = Calendar.getInstance();
+        int año=calendario.get(Calendar.YEAR);
+        int mes=calendario.get(Calendar.MONTH)+1;
+        int dia=calendario.get(Calendar.DATE);
         int hora =calendario.get(Calendar.HOUR_OF_DAY);
         int minutos = calendario.get(Calendar.MINUTE);
         int segundos = calendario.get(Calendar.SECOND);
-        String tiempo=hora + ":" + minutos + ":" + segundos;
+        String tiempo=dia+"/"+mes+"/"+año+" "+hora + ":" + minutos + ":" + segundos;
         padre.archivos.insertar1(nombre,extension,contenido,tiempo);
     }
     
-    public String SearchArchivo(String inicio){
+    public String ListarArchivos(String inicio){
         NodoCarpeta padre=this.BuscarCol(inicio);
         return padre.archivos.ListaArchivos();
     }    
@@ -214,7 +218,12 @@ public class Carpetas {
     public String[] contenidoarchivo(String inicio,String nombreextension){
         NodoCarpeta padre=this.BuscarCol(inicio);
         String[] nomext=nombreextension.split("\\.");
-        String[] archivo=padre.archivos.BuscarArchivo(nomext[0]);
+        String nombrearchivo=nomext[0];
+        for (int i = 1; i < nomext.length-1; i++) {
+            nombrearchivo+="."+nomext[i];
+        }
+        String[] archivo=padre.archivos.BuscarArchivo(nombrearchivo,nomext[nomext.length-1]);
+        System.out.println("Carpeta encontrada: "+Arrays.toString(archivo));
         return archivo;
     }
     
@@ -232,6 +241,36 @@ public class Carpetas {
         while(fil!=null){
             fil.nombre=fil.nombre.replace(inicio, nuevo);
             fil=fil.sig;
+        }
+    }
+    
+    public void modArchivo(String carpeta,String nombre,String nombre_nuevo,String contenido) throws IOException{
+        NodoCarpeta padre=this.BuscarCol(carpeta);
+        String nombreold2[]=nombre.split("\\.");
+        String nombrearchivoold=nombreold2[0];
+        for (int i = 1; i < nombreold2.length-1; i++) {
+            nombrearchivoold+=nombreold2[i];
+        }
+        String nombrenew2[]=nombre_nuevo.split("\\.");
+        String nombrearchivonew=nombrenew2[0];
+        for (int i = 1; i < nombrenew2.length-1; i++) {
+            nombrearchivonew+=nombrenew2[i];
+        }
+       if (nombrearchivoold.equals(nombrearchivonew) && nombreold2[nombreold2.length-1].equals(nombrenew2[nombrenew2.length-1])) {
+            System.out.println("Modificar con mismo nombre");
+            padre.archivos.ModContenidoArchivo(nombrearchivoold,nombreold2[nombreold2.length-1],contenido);
+        }else{
+            System.out.println("modificar con nombre distinto");
+            padre.archivos.BuscaraEliminar(nombrearchivoold,nombreold2[nombreold2.length-1]);
+            Calendar calendario = Calendar.getInstance();
+            int año=calendario.get(Calendar.YEAR);
+            int mes=calendario.get(Calendar.MONTH)+1;
+            int dia=calendario.get(Calendar.DATE);
+            int hora =calendario.get(Calendar.HOUR_OF_DAY);
+            int minutos = calendario.get(Calendar.MINUTE);
+            int segundos = calendario.get(Calendar.SECOND);
+            String tiempo=dia+"/"+mes+"/"+año+" "+hora + ":" + minutos + ":" + segundos;
+            padre.archivos.insertar1(nombrearchivonew, nombrenew2[nombrenew2.length-1], contenido, tiempo);
         }
     }
     
@@ -264,6 +303,16 @@ public class Carpetas {
         fil.inf.sup=fil.sup;
     }
     
+    public void eliminararchivo(String carpeta,String nombre){
+        NodoCarpeta padre=this.BuscarCol(carpeta);
+        String[] nombre2=nombre.split("\\.");
+        String nombreeliminar=nombre2[0];
+        for (int i = 1; i < nombre2.length-1; i++) {
+            nombreeliminar+=nombre2[i];
+        }
+        padre.archivos.BuscaraEliminar(nombreeliminar,nombre2[nombre2.length-1]);
+    }
+    
     public void Graficar() throws IOException{
         NodoCarpeta tempx=this.inicio.sig;
         NodoCarpeta tempy;
@@ -285,5 +334,10 @@ public class Carpetas {
         archivo+="}";
         bw.write(archivo);
         bw.close();
+    }
+    
+    public File GraficarArchivos(String carpeta) throws IOException{
+        NodoCarpeta padre=this.BuscarCol(carpeta);
+        return padre.archivos.graficar();
     }
 }
