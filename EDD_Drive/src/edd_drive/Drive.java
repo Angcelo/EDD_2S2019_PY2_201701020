@@ -52,6 +52,15 @@ public class Drive extends javax.swing.JFrame {
         this.defaultIcon = new ImageIcon(getClass().getResource("/img/carpeta.png"));
         this.defaultIconarchivo=new ImageIcon(getClass().getResource("/img/archivo.png"));
         crearbotones(carpetaactual,direccion);
+        if(EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].Admin){
+            btnupuser.setVisible(true);
+            btnbitacora.setVisible(true);
+            brnreportuser.setVisible(true);
+        }else{
+            btnupuser.setVisible(false);
+            btnbitacora.setVisible(false);
+            brnreportuser.setVisible(false);
+        }
     }
 
     /**
@@ -517,7 +526,7 @@ public class Drive extends javax.swing.JFrame {
                     if (texto[pass].length()<8) {
                         errores+="Usuario: "+texto[user]+" no cumple con la contraseña \n";
                     }else{
-                        if(EDD_Drive.user.Insertar(texto[user], texto[pass])){
+                        if(EDD_Drive.user.Insertar(texto[user], texto[pass],false)){
                             usuarios+=texto[user]+", ";
                         }else{
                             errores+="Usuario"+texto[user]+" usuario ya existe \n";

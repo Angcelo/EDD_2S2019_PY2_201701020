@@ -14,10 +14,19 @@ public class NodoUsuario {
     public String password;
     public String documentos;
     public Carpetas carpetas;
+    public boolean Admin;
     
-    NodoUsuario(String usuario,String password){
+    public NodoUsuario(String usuario,String password){
         this.usuario=usuario;
         this.password=password;
         carpetas=new Carpetas();
+        this.Admin=false;
+    }
+    
+    public NodoUsuario(String usuario,String password,boolean Admin){
+        this.usuario=usuario;
+        this.password=password;
+        carpetas=new Carpetas();
+        this.Admin=Admin;
     }
 }

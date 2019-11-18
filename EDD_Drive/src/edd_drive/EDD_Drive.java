@@ -22,7 +22,7 @@ public class EDD_Drive {
     static Bitacora bitacora=new Bitacora();
     
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException{
-        user.Insertar("Admin","Admin");
+        user.Insertar("Admin","Admin",true);
         Ventana ventana =new Ventana();
         ventana.setVisible(true);
     }

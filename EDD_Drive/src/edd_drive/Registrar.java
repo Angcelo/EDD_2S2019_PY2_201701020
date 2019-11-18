@@ -126,7 +126,7 @@ public class Registrar extends javax.swing.JFrame {
         if (password.equals(password2) && password.length()>=8) {
             if (!usuario.equals("") || !password.equals("")) {
                 try {
-                    EDD_Drive.user.Insertar(usuario, password);                                        
+                    EDD_Drive.user.Insertar(usuario, password,false);                                        
                     JOptionPane.showMessageDialog(null, "Registrado con existo");
                     System.out.println("Registrado");
                     this.dispose();

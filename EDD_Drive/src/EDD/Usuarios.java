@@ -31,7 +31,7 @@ public class Usuarios {
     public NodoUsuario usuarios[]=new NodoUsuario[7];
     public int lleno=0;
     
-    public boolean Insertar(String usuario,String password) throws NoSuchAlgorithmException{
+    public boolean Insertar(String usuario,String password,boolean Admin) throws NoSuchAlgorithmException{
         if (BuscarUsuario(usuario)!=-1) {
             System.out.println("Usuario existente");
             JOptionPane.showMessageDialog(null, "Usuario existente");
@@ -47,7 +47,7 @@ public class Usuarios {
             if (usuarios[id]==null) {
                 byte[] passencode = digest.digest(password.getBytes(StandardCharsets.UTF_8));
                 int passcode=Arrays.hashCode(passencode);
-                usuarios[id]=new NodoUsuario(usuario,passcode+"");
+                usuarios[id]=new NodoUsuario(usuario,passcode+"",Admin);
                 lleno++;
                 continuar=false;
             }else{
