@@ -5,6 +5,8 @@
  */
 package EDD;
 
+import java.awt.Dimension;
+import java.awt.Image;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,10 +15,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -124,7 +129,7 @@ public class Usuarios {
         return false;
     }
     
-    public File Graficar() throws IOException{
+    public void Graficar() throws IOException{
         int iterador=0;
         File file=new File("usuarios.dot");
         BufferedWriter bw;
@@ -157,10 +162,17 @@ public class Usuarios {
         try {
             String cmd = "dot -Tjpg usuarios.dot -o usersimg.jpg"; //Comando de apagado en linux
             Runtime.getRuntime().exec(cmd); 
+            File imagen=new File("usersimg.jpg");
+            JOptionPane.showMessageDialog(null, "Reporte generado");
+            Image image = ImageIO.read(imagen);
+            Icon icon=new ImageIcon(image);
+            JLabel label=new JLabel();
+            label.setIcon(icon);
+            JScrollPane Scroll=new JScrollPane(label);
+            Scroll.setMaximumSize(new Dimension(1400,800));
+            JOptionPane.showMessageDialog(null, Scroll);
         } catch (IOException ioe) {
             System.out.println (ioe);
         }
-        File imagen=new File("usersimg.jpg");
-        return imagen;
     }
 }

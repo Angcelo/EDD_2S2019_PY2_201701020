@@ -1,0 +1,6 @@
+graph matriz{ 
+ rankdir=LR; 
+_[label = "/"];
+hola[label = "hola"];
+_ -- hola
+}

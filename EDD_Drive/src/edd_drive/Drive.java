@@ -40,6 +40,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Drive extends javax.swing.JFrame {
 
+ 
     public String carpetaactual="/";
     public String direccion="/";
     private final ImageIcon defaultIcon;
@@ -171,7 +172,7 @@ public class Drive extends javax.swing.JFrame {
             }
         });
 
-        btnbitacora.setText("Bitacora");
+        btnbitacora.setText("Reporte Bitacora");
         btnbitacora.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnbitacoraActionPerformed(evt);
@@ -394,9 +395,7 @@ public class Drive extends javax.swing.JFrame {
 
     private void btnbitacoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbitacoraActionPerformed
         try {
-            File imagenurl=EDD_Drive.bitacora.GraficarBitacora();
-            Imagenes ventanaimg=new Imagenes(imagenurl);
-            ventanaimg.setVisible(true);
+            EDD_Drive.bitacora.GraficarBitacora();
         } catch (IOException ex) {
             Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -404,7 +403,8 @@ public class Drive extends javax.swing.JFrame {
 
     private void btnreportecarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnreportecarActionPerformed
         try {
-            EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.Graficar();
+            EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.GraficarMatriz();
+            EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.GraficarGrafo();
         } catch (IOException ex) {
             Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -412,9 +412,7 @@ public class Drive extends javax.swing.JFrame {
 
     private void btnreportarchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnreportarchivosActionPerformed
         try {
-            File fileimagen=EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.GraficarArchivos(this.carpetaactual);
-            Imagenes ventanaimg=new Imagenes(fileimagen);
-            ventanaimg.setVisible(true);
+            File imgArch=EDD_Drive.user.usuarios[EDD_Drive.usuarioactual].carpetas.GraficarArchivos(this.carpetaactual);
         } catch (IOException ex) {
             Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -553,9 +551,7 @@ public class Drive extends javax.swing.JFrame {
 
     private void brnreportuserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnreportuserActionPerformed
         try {
-            File imagen=EDD_Drive.user.Graficar();
-            Imagenes ventana=new Imagenes(imagen);
-            ventana.setVisible(true);
+            EDD_Drive.user.Graficar();
         } catch (IOException ex) {
             Logger.getLogger(Drive.class.getName()).log(Level.SEVERE, null, ex);
         }

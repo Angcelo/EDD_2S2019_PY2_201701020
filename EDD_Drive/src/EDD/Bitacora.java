@@ -5,13 +5,18 @@
  */
 package EDD;
 
-import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -35,6 +40,8 @@ public class Bitacora {
     }
     
     public File GraficarBitacora() throws IOException{
+        File eliminar=new File("imgBitacora.jpg");
+        eliminar.delete();
         File file=new File("Bitacora.dot");
         BufferedWriter bw;
         bw=new BufferedWriter(new FileWriter(file));
@@ -51,13 +58,23 @@ public class Bitacora {
         archivo+="\",height=2.5];}";
         bw.write(archivo);
         bw.close();
+        File imagen=null;
         try {
             String cmd = "dot -Tjpg Bitacora.dot -o imgBitacora.jpg"; //Comando de apagado en linux
-            Runtime.getRuntime().exec(cmd); 
+            Runtime.getRuntime().exec(cmd);
+            JOptionPane.showMessageDialog(null, "Reporte generado");
+            imagen=new File("imgBitacora.jpg");
+            Image image = ImageIO.read(imagen);
+            Icon icon=new ImageIcon(image);
+            JLabel label=new JLabel();
+            label.setIcon(icon);
+            JScrollPane Scroll=new JScrollPane(label);
+            Scroll.setMaximumSize(new Dimension(1400,800));
+            JOptionPane.showMessageDialog(null, Scroll);
         } catch (IOException ioe) {
+            System.out.println("Error al crear el archivo");
             System.out.println (ioe);
         }
-        File imagen=new File("imgBitacora.jpg");
         return imagen;
     }
 }

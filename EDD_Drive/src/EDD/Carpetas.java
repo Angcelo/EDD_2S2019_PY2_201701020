@@ -5,12 +5,20 @@
  */
 package EDD;
 
+import java.awt.Dimension;
+import java.awt.Image;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -19,7 +27,7 @@ import java.util.Calendar;
 public class Carpetas {
     public NodoCarpeta inicio;
     public Carpetas(){
-        this.inicio=new NodoCarpeta("raiz",0,0);
+        this.inicio=new NodoCarpeta("Inicio",0,0);
         this.CrearCol("/");
         this.CrearFil("/");
     }
@@ -313,27 +321,111 @@ public class Carpetas {
         padre.archivos.BuscaraEliminar(nombreeliminar,nombre2[nombre2.length-1]);
     }
     
-    public void Graficar() throws IOException{
-        NodoCarpeta tempx=this.inicio.sig;
+    public void GraficarMatriz() throws IOException{
+        NodoCarpeta tempx;
         NodoCarpeta tempy;
         File file=new File("Carpetas.dot");
         BufferedWriter bw;
         bw=new BufferedWriter(new FileWriter(file));
         String archivo;
-        archivo="digraph pila{ \n";
-        archivo+="node [shape=\"record\"]; \n";
-        archivo+="inicio [label = \"{"+inicio.nombre+"|("+inicio.x+","+inicio.y+")}\"];\n";
+        archivo="digraph matriz{ \n"; 
+        tempx=this.inicio;
+        while(tempx!=null){
+            tempy=tempx;
+            archivo+="{rank = same;\n";
+            while(tempy!=null){
+                archivo+=tempy.x+""+tempy.y+"[group=\"g"+tempy.x+"\" label = \""+tempy.nombre+"\"];\n";
+                tempy=tempy.sig;
+            }
+            archivo+="}\n";
+            tempx=tempx.sup;
+        }
+        tempx=this.inicio;
         while(tempx!=null){
             tempy=tempx;
             while(tempy!=null){
-                archivo+=tempy.nombreindice+"[label = \"{"+tempy.nombre+"|("+tempy.x+","+tempy.y+")}\"];\n";
-                tempy=tempy.sup;
+                if (tempy.sig!=null) {
+                    archivo+=tempy.x+""+tempy.y+"->"+tempy.sig.x+""+tempy.sig.y+";\n";
+                }
+                if (tempy.ant!=null) {
+                    archivo+=tempy.x+""+tempy.y+"->"+tempy.ant.x+""+tempy.ant.y+";\n";
+                }
+                if(tempy.sup!=null){
+                    archivo+=tempy.x+""+tempy.y+"->"+tempy.sup.x+""+tempy.sup.y+";\n";   
+                }
+                if (tempy.inf!=null) {
+                    archivo+=tempy.x+""+tempy.y+"->"+tempy.inf.x+""+tempy.inf.y+";\n";
+                }
+                
+                tempy=tempy.sig;
             }
-            tempx=tempx.sig;
+            tempx=tempx.sup;
         }
         archivo+="}";
         bw.write(archivo);
         bw.close();
+        try {
+            String cmd = "dot -Tjpg Carpetas.dot -o imgcarpetas.jpg"; //Comando de apagado en linux
+            Runtime.getRuntime().exec(cmd); 
+        } catch (IOException ioe) {
+            System.out.println (ioe);
+        }
+        File imagen=new File("imgcarpetas.jpg");
+        JOptionPane.showMessageDialog(null, "Reporte generado");
+        Image image = ImageIO.read(imagen);
+        Icon icon=new ImageIcon(image);
+        JLabel label=new JLabel();
+        label.setIcon(icon);
+        JScrollPane Scroll=new JScrollPane(label);
+        Scroll.setMaximumSize(new Dimension(1400,800));
+        JOptionPane.showMessageDialog(null, Scroll);
+    }
+    
+    public void GraficarGrafo() throws IOException{
+        File file=new File("grafo.dot");
+        BufferedWriter bw;
+        bw=new BufferedWriter(new FileWriter(file));
+        String archivo;
+        archivo="graph matriz{ \n rankdir=LR; \n"; 
+        NodoCarpeta temp=this.inicio.sig;
+        while(temp!=null){
+            String nombre=temp.nombreindice.replace("/", "_");
+            nombre=nombre.replaceAll("\\s","");
+            nombre=nombre.replace("-", "_");
+            archivo+=nombre+"[label = \""+temp.nombre+"\"];\n";
+            temp=temp.sig;
+        }
+        temp=this.inicio.sig;
+        while(temp!=null){
+            String sinslash=temp.nombreindice.replace("/", "_");
+            NodoCarpeta tempy=temp.sup;
+            while(tempy!=null){
+                System.out.println(tempy.nombreindice);
+                String[] datos=tempy.nombreindice.split("/");
+                String carpetasecundaria=datos[datos.length-1].replaceAll("\\s","");
+                archivo+=sinslash+" -- "+carpetasecundaria.replace("-", "_")+"\n";
+                tempy=tempy.sup;
+            }
+            temp=temp.sig;
+        }
+        archivo+="}";
+        bw.write(archivo);
+        bw.close();
+        try {
+            String cmd = "dot -Tjpg grafo.dot -o imggrafo.jpg"; //Comando de apagado en linux
+            Runtime.getRuntime().exec(cmd); 
+        } catch (IOException ioe) {
+            System.out.println (ioe);
+        }
+        File imagen=new File("imggrafo.jpg");
+        JOptionPane.showMessageDialog(null, "Reporte generado");
+        Image image = ImageIO.read(imagen);
+        Icon icon=new ImageIcon(image);
+        JLabel label=new JLabel();
+        label.setIcon(icon);
+        JScrollPane Scroll=new JScrollPane(label);
+        Scroll.setMaximumSize(new Dimension(1400,800));
+        JOptionPane.showMessageDialog(null, Scroll);
     }
     
     public File GraficarArchivos(String carpeta) throws IOException{

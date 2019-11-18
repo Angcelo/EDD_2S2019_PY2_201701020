@@ -210,7 +210,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnbitacora">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Bitacora"/>
+        <Property name="text" type="java.lang.String" value="Reporte Bitacora"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnbitacoraActionPerformed"/>

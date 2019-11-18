@@ -1,42 +1,4 @@
 digraph pila{ 
 node [shape="record"]; 
-NuncDonecjpeg [ label = "{NuncDonec.jpeg|pellentesque viverra pede ac diam cras pellentesque volutpat dui maecenas tristique est|17/11/2019 13:9:53|izq: 4der: 3}"];
-NuncDonecjpeg->Intxt
-Intxt [ label = "{In.txt|odio donec vitae nisi nam ultrices libero non mattis pulvinar nulla|17/11/2019 13:9:53|izq: 3 der: 3}"];
-Intxt->Consectetueravi
-Consectetueravi [ label = "{Consectetuer.avi|at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget|17/11/2019 13:9:53|izq: 2 der: 2}"];
-Consectetueravi->ArcuSedAugueppt
-ArcuSedAugueppt [ label = "{ArcuSedAugue.ppt|nam ultrices libero non mattis pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac nulla|17/11/2019 13:9:53|izq: 0 der: 1}"];
-ArcuSedAugueppt->AtNullappt
-AtNullappt [ label = "{AtNulla.ppt|eget nunc donec quis orci eget orci vehicula condimentum curabitur in libero ut massa volutpat convallis morbi|17/11/2019 13:9:53|izq: 0 der: 0}"];
-Consectetueravi->Felistiff
-Felistiff [ label = "{Felis.tiff|eleifend donec ut dolor morbi vel lectus in quam fringilla rhoncus|17/11/2019 13:9:53|izq: 1 der: 1}"];
-Felistiff->DolorMorbiavi
-DolorMorbiavi [ label = "{DolorMorbi.avi|lacinia erat vestibulum sed magna at nunc commodo placerat praesent blandit nam nulla integer pede justo|17/11/2019 13:9:53|izq: 0 der: 0}"];
-Felistiff->Inavi
-Inavi [ label = "{In.avi|massa id nisl venenatis lacinia aenean sit amet justo morbi ut odio cras|17/11/2019 13:9:53|izq: 0 der: 0}"];
-Intxt->NequeAeneangif
-NequeAeneangif [ label = "{NequeAenean.gif|penatibus et magnis dis parturient montes nascetur ridiculus mus etiam vel augue vestibulum rutrum rutrum neque aenean auctor gravida|17/11/2019 13:9:53|izq: 2 der: 2}"];
-NequeAeneangif->MusVivamusVestibulumavi
-MusVivamusVestibulumavi [ label = "{MusVivamusVestibulum.avi|volutpat eleifend donec ut dolor morbi vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum|17/11/2019 13:9:53|izq: 1 der: 1}"];
-MusVivamusVestibulumavi->Ipsumppt
-Ipsumppt [ label = "{Ipsum.ppt|nisl aenean lectus pellentesque eget nunc donec quis orci eget orci|17/11/2019 13:9:53|izq: 0 der: 0}"];
-MusVivamusVestibulumavi->Nasceturmov
-Nasceturmov [ label = "{Nascetur.mov|nam dui proin leo odio porttitor id consequat in consequat ut nulla sed accumsan felis ut at dolor quis|17/11/2019 13:9:53|izq: 0 der: 0}"];
-NequeAeneangif->NislNuncRhoncusavi
-NislNuncRhoncusavi [ label = "{NislNuncRhoncus.avi|ut nunc vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae|17/11/2019 13:9:53|izq: 1 der: 0}"];
-NislNuncRhoncusavi->NibhFuscempeg
-NibhFuscempeg [ label = "{NibhFusce.mpeg|ridiculus mus etiam vel augue vestibulum rutrum rutrum neque aenean auctor gravida sem praesent|17/11/2019 13:9:53|izq: 0 der: 0}"];
-NuncDonecjpeg->Ultricesavi
-Ultricesavi [ label = "{Ultrices.avi|proin leo odio porttitor id consequat in consequat ut nulla sed accumsan felis ut at dolor quis odio consequat|17/11/2019 13:9:53|izq: 2 der: 2}"];
-Ultricesavi->PedeUllamcorperAugueavi
-PedeUllamcorperAugueavi [ label = "{PedeUllamcorperAugue.avi|rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce lacus purus aliquet at|17/11/2019 13:9:53|izq: 1 der: 1}"];
-PedeUllamcorperAugueavi->PedeUllamcorpermp3
-PedeUllamcorpermp3 [ label = "{PedeUllamcorper.mp3|ornare consequat lectus in est risus auctor sed tristique in tempus sit amet sem fusce consequat nulla|17/11/2019 13:9:53|izq: 0 der: 0}"];
-PedeUllamcorperAugueavi->Ridiculusppt
-Ridiculusppt [ label = "{Ridiculus.ppt|lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris|17/11/2019 13:9:53|izq: 0 der: 0}"];
-Ultricesavi->Venenatismp3
-Venenatismp3 [ label = "{Venenatis.mp3|commodo vulputate justo in blandit ultrices enim lorem ipsum dolor sit amet consectetuer adipiscing elit|17/11/2019 13:9:53|izq: 1 der: 0}"];
-Venenatismp3->UltriciesEutiff
-UltriciesEutiff [ label = "{UltriciesEu.tiff|sapien non mi integer ac neque duis bibendum morbi non quam nec dui luctus rutrum nulla tellus in sagittis|17/11/2019 13:9:53|izq: 0 der: 0}"];
+holatxt [ label = "{hola.txt|asdf|17/11/2019 22:32:8|izq: 0der: 0}"];
 }

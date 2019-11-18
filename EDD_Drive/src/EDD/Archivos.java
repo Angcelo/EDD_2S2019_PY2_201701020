@@ -6,15 +6,19 @@
 package EDD;
 
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -79,6 +83,7 @@ public class Archivos {
             }
             else{
                 System.out.println("Palabra ya existente");
+                JOptionPane.showConfirmDialog(null, "Desea Sobreescribir", "Archivo existente", JOptionPane.YES_NO_OPTION);
             }
         }
     }
@@ -422,28 +427,29 @@ public class Archivos {
         }else{
             if ((this.Raiz.nombre+"."+this.Raiz.extension).compareTo(nombre+"."+extension)>0){
                 if (this.Raiz.izq!=null) {
+                    int eant=this.Raiz.izq.pesoder-this.Raiz.izq.pesoizq;
                     NodoArchivo Nodo=BuscaraEliminar(nombre,extension,this.Raiz.izq);
+                    int enuevo=this.Raiz.izq.pesoder-this.Raiz.izq.pesoizq;
                     if (this.eliminar) {
                         this.Raiz.izq=Nodo;
                         this.Raiz.pesoizq--;
                         this.eliminar=false;
-                    }else{
-                        int equilibrio=this.Raiz.izq.pesoder-this.Raiz.izq.pesoizq;
-                        if (equilibrio==0) {
-                            this.Raiz.pesoizq--;
-                        }
                     }
+                    if (eant!=enuevo && enuevo==0) {
+                            this.Raiz.pesoizq--;
+                    }                    
                 }
             }else if((this.Raiz.nombre+"."+this.Raiz.extension).compareTo(nombre+"."+extension)<0){
                 if (this.Raiz.der!=null){
+                    int eant=this.Raiz.der.pesoder-this.Raiz.der.pesoizq;
                     NodoArchivo Nodo=BuscaraEliminar(nombre,extension,this.Raiz.der);
+                    int enuevo=this.Raiz.der.pesoder-this.Raiz.der.pesoizq;
                     if (this.eliminar) {
                         this.Raiz.der=Nodo;
                         this.Raiz.pesoder--;
                         this.eliminar=false;
                     }else{
-                        int equilibrio=this.Raiz.izq.pesoder-this.Raiz.izq.pesoizq;
-                        if (equilibrio==0) {
+                        if (eant!=enuevo && enuevo==0) {
                             this.Raiz.pesoder--;
                         }
                     }
@@ -504,28 +510,30 @@ public class Archivos {
         }else{
             if ((actual.nombre+"."+actual.extension).compareTo(nombre+"."+extension)>0){
                 if (actual.izq!=null) {
+                    int eant=actual.izq.pesoder-actual.izq.pesoizq;
                     Nodo=BuscaraEliminar(nombre,extension,actual.izq);
+                    int enuevo=actual.izq.pesoder-actual.izq.pesoizq;
                     if (this.eliminar) {
                         actual.izq=Nodo;
                         actual.pesoizq--;
                         this.eliminar=false;
                     }else{
-                        int equilibrio=actual.izq.pesoder-actual.izq.pesoizq;
-                        if (equilibrio==0) {
+                        if (eant!=enuevo && enuevo==0) {
                             actual.pesoizq--;
                         }
                     }
                 }
             }else if((actual.nombre+"."+actual.extension).compareTo(nombre+"."+extension)<0){
                 if (actual.der!=null){
+                    int eant=actual.der.pesoder-actual.der.pesoizq;
                     Nodo=BuscaraEliminar(nombre,extension,actual.der);
+                    int enuevo=actual.der.pesoder-actual.der.pesoizq;
                     if (this.eliminar) {
                         actual.der=Nodo;
                         actual.pesoder--;
                         this.eliminar=false;
                     }else{
-                        int equilibrio=actual.izq.pesoder-actual.izq.pesoizq;
-                        if (equilibrio==0) {
+                        if (eant!=enuevo && enuevo==0) {
                             actual.pesoder--;
                         }
                     }
@@ -608,6 +616,14 @@ public class Archivos {
             System.out.println (ioe);
         }
         File imagen=new File("imagena.jpg");
+        JOptionPane.showMessageDialog(null, "Reporte generado");
+        Image image = ImageIO.read(imagen);
+        Icon icon=new ImageIcon(image);
+        JLabel label=new JLabel();
+        label.setIcon(icon);
+        JScrollPane Scroll=new JScrollPane(label);
+        Scroll.setMaximumSize(new Dimension(1400,800));
+        JOptionPane.showMessageDialog(null, Scroll);
         return imagen;
     }
     
