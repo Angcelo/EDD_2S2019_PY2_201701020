@@ -83,7 +83,10 @@ public class Archivos {
             }
             else{
                 System.out.println("Palabra ya existente");
-                JOptionPane.showConfirmDialog(null, "Desea Sobreescribir", "Archivo existente", JOptionPane.YES_NO_OPTION);
+                if (JOptionPane.showConfirmDialog(null, "Desea Sobreescribir", "Archivo existente", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+                    System.out.println("Reescribiendo");
+                    this.Raiz.contenido=contenido;
+                }
             }
         }
     }
@@ -139,6 +142,10 @@ public class Archivos {
         }
         else{
             System.out.println("Palabra ya existente");
+                if (JOptionPane.showConfirmDialog(null, "Desea Sobreescribir", "Archivo existente", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION) {
+                    System.out.println("Reescribiendo");
+                    raiz.contenido=nuevo.contenido;
+                }
         }
         return null;
     }
